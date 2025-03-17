@@ -15,7 +15,7 @@ const Banner = () => {
             </div>
 
             <div className='mt-10'>
-                <button className='text-lg dark:text-[#D0CDEF] text-gray-800 font-medium px-[32px] rounded-full py-2 dark:bg-[#271E88] bg-[#271E88] text-white cursor-pointer'>
+                <button className='text-lg dark:text-[#D0CDEF]  font-medium px-[50px] rounded-full py-3 dark:bg-[#271E88] bg-[#271E88] text-[#D0CDEF] cursor-pointer'>
                     Start Now
                 </button>
             </div>
