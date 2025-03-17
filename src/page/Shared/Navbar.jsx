@@ -185,12 +185,16 @@ const Navbar = () => {
 
           {/* Auth Buttons - Right Side */}
           <div className="hidden md:flex items-center space-x-2">
-            <button 
+          <button>  
+            <Link 
+            to='/login'
               className="flex items-center justify-center space-x-1 px-6 py-2 rounded-full text-lg font-medium text-white bg-[#271E88] hover:bg-indigo-800 transition-all duration-200"
             >
               <RiLoginBoxLine className="w-4 h-4" />
               <span>Login</span>
+            </Link>
             </button>
+
             <button>
               <Link to='/register' className="flex bg-[#271E88] items-center space-x-1 px-6 py-2 rounded-full text-lg font-medium text-white transition-all duration-200 hover:bg-indigo-800 shadow-md">
                 <RiUserAddLine className="w-4 h-4" />

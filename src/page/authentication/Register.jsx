@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useDarkMood } from "../../Context/ThemeContext";
 import { FaGoogle } from "react-icons/fa";
 import { GrApple } from "react-icons/gr";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const { register, handleSubmit } = useForm();
@@ -16,9 +17,7 @@ const Register = () => {
     <div className="flex min-h-screen justify-center items-center">
       {/* Left Section - Form */}
       <div className="w-full md:w-1/2 dark:bg-[#181636]  min-h-screen flex flex-col justify-center items-center p-6 md:p-10">
-        <button className="text-gray-500 dark:text-gray-400 text-sm self-start hover:text-gray-700 dark:hover:text-gray-200">
-          ← Back
-        </button>
+    
         <h1 className="text-2xl md:text-3xl font-bold mt-6 dark:text-[#D0CDEF] text-gray-800">
           Welcome To Luxbot
         </h1>
@@ -44,9 +43,11 @@ const Register = () => {
           />
           <div className="text-sm dark:text-[#D0CDEF] text-gray-800 flex items-center justify-end">
             Already have an account?{" "}
-            <span className="text-[#5784FF] dark:text-blue-400 cursor-pointer hover:underline ms-2 font-semibold">
+            <Link 
+            to='/login'
+            className="text-[#5784FF] dark:text-blue-400 cursor-pointer hover:underline ms-2 font-semibold">
               Login
-            </span>
+            </Link>
           </div>
           <button
             type="submit"
@@ -55,7 +56,7 @@ const Register = () => {
             Register
           </button>
         </form>
-        <p className="dark:text-[#CECBED] text-gray-800 my-3">Or sign up with...</p>
+        <p className="dark:text-[#CECBED] text-gray-800 my-3">Or Sign up with...</p>
         <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
           <button className="flex items-center justify-center gap-2 border border-[#3831A3] bg-gray-200 dark:bg-gray-800 px-4 py-2 rounded-md  hover:bg-gray-300 dark:hover:bg-gray-700">
             <FaGoogle className="text-lg dark:text-[#E2E0F5] text-gray-900 "/>

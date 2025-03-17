@@ -4,7 +4,7 @@ import { useDarkMood } from "../../Context/ThemeContext";
 import { Link } from "react-router-dom";
 
 
-const Login = () => {
+const EmailVarification = () => {
   const { register, handleSubmit } = useForm();
   const { darkMode } = useDarkMood();
 
@@ -18,7 +18,7 @@ const Login = () => {
       <div className="w-full md:w-1/2 dark:bg-[#181636]  min-h-screen flex flex-col justify-center items-center p-6 md:p-10">
   
         <h1 className="text-2xl md:text-3xl font-bold mt-6 dark:text-[#D0CDEF] text-gray-800 mb-10">
-         Welcome back
+         Confirm Email
         </h1>
        
         <form className="w-full max-w-md space-y-4" onSubmit={handleSubmit(onSubmit)}>
@@ -29,40 +29,19 @@ const Login = () => {
             placeholder="Email"
             className="w-full p-3 border border-gray-700   rounded-md dark:text-[#D0CDEF] text-gray-800 outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <input
-            {...register("password")}
-            type="password"
-            placeholder="Password"
-            className="w-full p-3 border border-gray-700   rounded-md dark:text-[#D0CDEF] text-gray-800 outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <div className="text-sm dark:text-[#D0CDEF] text-gray-800 flex items-center justify-end">
-           
-           <Link 
-           to='/email_verification'
-           className="hover:underline"
-           >
-           Forget Password?{" "}
-           </Link>
-           
-          </div>
-          <button
+          
+          
+        <button className="flex items-center justify-center mx-auto">
+        <Link
+        to='/otp_verification'
             type="submit"
-            className="w-full dark:bg-[#04021C] font-medium  hover:bg-gray-900 border border-[#3831A3]  p-3 rounded-md mt-3 dark:text-[#E2E0F5] text-gray-900 "
+            className="w-full dark:bg-[#04021C] font-medium  hover:bg-gray-900 border border-[#3831A3] px-10 p-2 rounded-md dark:text-[#E2E0F5] text-gray-900 "
           >
-           Login
-          </button>
+           Continue
+          </Link>
+        </button>
         </form>
 
-        <div className="mt-7 flex items-center gap-2">
-        <h1 className="dark:text-[#D0CDEF] text-gray-800">Don't have an account?</h1>
-<button>
-<Link 
-to='/register'
-className="px-8 py-3 rounded-full dark:bg-[#271E88] hover:bg-indigo-800 dark:text-[#D0CDEF] text-gray-800 font-medium">Sing Up</Link>
-
-</button>
-        </div>
-       
       </div>
 
   
@@ -84,4 +63,4 @@ the Legal System,
   );
 };
 
-export default Login;
+export default EmailVarification;
