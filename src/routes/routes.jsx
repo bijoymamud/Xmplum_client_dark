@@ -5,6 +5,8 @@ import Register from "../page/authentication/Register";
 import Login from "../page/authentication/Login";
 import EmailVarification from "../page/authentication/MailVarification";
 import OtpVerification from "../page/authentication/OtpVerification";
+import ChangePass from "../page/authentication/ChangePass";
+import Confirmation from "../page/authentication/Confirmation";
 
 export const router = createBrowserRouter([
   {
@@ -34,5 +36,13 @@ export const router = createBrowserRouter([
   {
     path: '/otp_verification',
     element: <OtpVerification/>
+  },
+  {
+    path: '/confirm_password',
+    element: <ChangePass/>
+  },
+  {
+    path: '/changed_password',
+    element: <Confirmation/>
   }
 ]);

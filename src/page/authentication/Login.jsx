@@ -47,7 +47,7 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full dark:bg-[#04021C] font-medium  hover:bg-gray-900 border border-[#3831A3]  p-3 rounded-md mt-3 dark:text-[#E2E0F5] text-gray-900 "
+            className="w-full dark:bg-[#04021C] font-medium  hover:bg-gray-200 bg-white border border-[#3831A3]  p-3 rounded-md mt-3 dark:text-[#E2E0F5] text-gray-900 hover:dark:bg-gray-900"
           >
            Login
           </button>
@@ -58,7 +58,7 @@ const Login = () => {
 <button>
 <Link 
 to='/register'
-className="px-8 py-3 rounded-full dark:bg-[#271E88] hover:bg-indigo-800 dark:text-[#D0CDEF] text-gray-800 font-medium">Sing Up</Link>
+className="px-8 py-3 rounded-full dark:bg-[#271E88] bg-[#271E88] hover:bg-indigo-800 dark:text-[#D0CDEF] text-[#D0CDEF]  font-medium">Sing Up</Link>
 
 </button>
         </div>
