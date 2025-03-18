@@ -1,6 +1,8 @@
 import React from 'react'
+import { Link, useParams } from 'react-router-dom'
 
 const Banner = () => {
+  const {id} = useParams()
   return (
     <section className='min-h-screen flex items-center justify-center bg-white dark:bg-[#221F42]'>
       <div className='container mx-auto px-4'>
@@ -15,9 +17,13 @@ const Banner = () => {
             </div>
 
             <div className='mt-10'>
-                <button className='text-lg dark:text-[#D0CDEF]  font-medium px-[50px] rounded-full py-3 dark:bg-[#271E88] bg-[#271E88] text-[#D0CDEF] cursor-pointer'>
-                    Start Now
-                </button>
+              <Link 
+              to={`layout/chat/${id}`}
+              >
+              <button className='text-lg dark:text-[#D0CDEF]  font-medium px-[50px] rounded-full py-3 dark:bg-[#271E88] bg-[#271E88] text-[#D0CDEF] cursor-pointer'>
+                Start Now
+              </button>
+              </Link>
             </div>
           </div>
 

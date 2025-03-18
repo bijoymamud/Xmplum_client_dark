@@ -7,20 +7,30 @@ import EmailVarification from "../page/authentication/MailVarification";
 import OtpVerification from "../page/authentication/OtpVerification";
 import ChangePass from "../page/authentication/ChangePass";
 import Confirmation from "../page/authentication/Confirmation";
+import MessageLayout from "../page/Message/MessageLayout";
+import ChatInterface from "../page/Message/ChatInterface";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Main />,
     children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
+      {path: "/", element: <Home />},
+      
     ],
 
   
   },
+
+  {path: '/layout', element: <MessageLayout/>,
+    children : [
+      {path: 'chat/:id', element: <ChatInterface/>},
+
+    ]
+    
+  },
+
+
   {
     path:'/register',
     element: <Register/>, 
