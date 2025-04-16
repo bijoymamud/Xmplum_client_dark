@@ -1,15 +1,28 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useDarkMood } from "../../Context/ThemeContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEmailVarificationMutation } from "../../redux/features/baseApi";
 
 
 const EmailVarification = () => {
   const { register, handleSubmit } = useForm();
   const { darkMode } = useDarkMood();
-
+  const [emailVarification, isLoading] = useEmailVarificationMutation()
+  const navigate = useNavigate()
   const onSubmit = (data) => {
     console.log(data);
+
+    try {
+      const response  = emailVarification(data?.email).unwrap();
+      console.log("response", response)
+      localStorage.setItem("email", data?.email)
+
+
+      navigate('/otp_verification')
+    } catch (error) {
+      console.log("Error", error)
+    }
   };
 
   return (
@@ -31,15 +44,15 @@ const EmailVarification = () => {
           />
           
           
-        <button className="flex items-center justify-center mx-auto">
-        <Link
-        to='/otp_verification'
+        <div className="flex items-center justify-center mx-auto">
+        <button
+        
             type="submit"
             className="w-full dark:bg-[#04021C] font-medium  hover:bg-gray-200 border border-[#3831A3] px-10 p-2 rounded-md dark:text-[#E2E0F5] text-gray-900 hover:dark:bg-gray-900 "
           >
            Continue
-          </Link>
-        </button>
+          </button>
+        </div>
         </form>
 
       </div>
