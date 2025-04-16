@@ -29,8 +29,18 @@ export const baseApi = createApi({
                 url: '/users/activate/',
                 body: {email, otp},
             })
+        }),
+
+        //login
+        loggedIn: builder.mutation({
+            query: (userData) =>({
+                url: '/users/login/',
+                method: "POST",
+                body: userData
+            })
         })
 
+     
 })
 });
 
@@ -38,6 +48,9 @@ export const {
     //authentication
     useCreateUserMutation,
     useSignupOTPMutation,
+
+    // loginData
+    useLoggedInMutation,
 
 } = baseApi;
 
