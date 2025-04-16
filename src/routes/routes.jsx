@@ -9,6 +9,7 @@ import ChangePass from "../page/authentication/ChangePass";
 import Confirmation from "../page/authentication/Confirmation";
 import MessageLayout from "../page/Message/MessageLayout";
 import ChatInterface from "../page/Message/ChatInterface";
+import SignupVerification from "../page/authentication/SignupVerification";
 
 export const router = createBrowserRouter([
   {
@@ -54,5 +55,9 @@ export const router = createBrowserRouter([
   {
     path: '/changed_password',
     element: <Confirmation/>
+  },
+  {
+    path:'/verify_signup',
+    element: <SignupVerification/>
   }
 ]);

@@ -81,7 +81,7 @@ const ChatInterface = () => {
                 <div
                   className={`max-w-xs md:max-w-md p-3 rounded-lg shadow-md ${
                     message.sender === "user"
-                      ? "bg-blue-600 text-white"
+                      ? "dark:bg-[#252244] dark:text-[#D0CDEF]"
                       : "bg-gray-200 dark:bg-gray-700 dark:text-gray-200 text-gray-800"
                   }`}
                 >
