@@ -2,21 +2,24 @@ import React, { useState, useRef, useEffect } from "react";
 
 import { useParams } from "react-router-dom";
 import { Send, Paperclip } from "lucide-react"; // Icons for send and attachment
+import { useDispatch, useSelector } from "react-redux";
+import { useSendMessageMutation } from "../../redux/features/baseApi";
+import { addChatMessage, setChatId } from "../../redux/state/sliceChatPage";
 
 const ChatInterface = () => {
-  const { id } = useParams(); // Get the chat ID from URL params
-  const [messages, setMessages] = useState([]); // Store chat messages
-  const [input, setInput] = useState(""); // Store the current input
-  const chatEndRef = useRef(null); // Reference to scroll to the bottom
-  const chatContainerRef = useRef(null); // Reference to the chat container
+  const dispatch = useDispatch()
+  const chatId = useSelector((state) =>state.chatpage.chatId)
+  const botId = useSelector((state) =>state.chatpage.botId)
+  const messages = useSelector((state) =>state.chatpage.chatList)
+  console.log(chatId, botId)
+  // const [messages, setMessages] = useState([]); 
+  const [input, setInput] = useState(""); 
+  const chatEndRef = useRef(null); 
+  const chatContainerRef = useRef(null); 
+  const [sendMessage, {isLoading}] = useSendMessageMutation();
 
-  // Sample bot responses (replace with API calls later)
-  const botResponses = [
-    "Hello! How can I assist you today?",
-    "That's an interesting question! Let me help you with that.",
-    "Could you provide more details, please?",
-    "I'm here to help with any legal queries you might have!",
-  ];
+
+
 
   // Scroll to the bottom of the chat whenever messages change
   useEffect(() => {
@@ -24,22 +27,24 @@ const ChatInterface = () => {
   }, [messages]);
 
   // Handle sending a message
-  const handleSendMessage = () => {
-    if (input.trim() === "") return; // Prevent sending empty messages
+  const handleSendMessage =async () => {
+    if (input.trim() === "") return; 
 
-    // Add user message to chat
-    setMessages([...messages, { text: input, sender: "user" }]);
-    setInput(""); // Clear input
+    const formData = new FormData();
+    formData.append("question", input.trim());
+    formData.append("chat_id", chatId);
+    formData.append("bot_id", botId);
 
-    // Simulate bot response (replace with API call)
-    setTimeout(() => {
-      const randomResponse =
-        botResponses[Math.floor(Math.random() * botResponses.length)];
-      setMessages((prev) => [
-        ...prev,
-        { text: randomResponse, sender: "bot" },
-      ]);
-    }, 1000); // Delay to simulate bot thinking
+
+    try {
+      const response = await sendMessage(formData).unwrap();
+      console.log(response?.chat_id)
+      dispatch(setChatId(response?.chat_id));
+      dispatch(addChatMessage(response?.chat_id));
+    } catch (error) {
+      console.log(error)
+    }
+ // Delay to simulate bot thinking
   };
 
   // Handle pressing Enter to send
@@ -85,7 +90,8 @@ const ChatInterface = () => {
                       : "bg-gray-200 dark:bg-gray-700 dark:text-gray-200 text-gray-800"
                   }`}
                 >
-                  <p>{message.text}</p>
+                  <p>{message.question}</p>
+                  <p>{message.answer}</p>
                 </div>
               </div>
             ))
@@ -128,5 +134,23 @@ const ChatInterface = () => {
 export default ChatInterface;
 
 
+// import React from 'react'
+// import { useDispatch, useSelector } from 'react-redux'
+// import { setChatId } from '../../redux/state/sliceChatPage';
 
+// const ChatInterface = () => {
+//   const dispatch = useDispatch();
+//   const botId = useSelector((state)=>state.chatpage.botId)
+//   console.log(botId)
 
+//   const setInitialChatId =()=>{
+//     // dispatch(setChatId())
+//   }
+//   return (
+//     <div>
+//       <h1 className='dark:text-[#D0CDEF]'>Chat page will go here</h1>
+//     </div>
+//   )
+// }
+
+// export default ChatInterface

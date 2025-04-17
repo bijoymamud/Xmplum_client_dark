@@ -3,7 +3,7 @@
 
 
 import React, { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import {
   Menu,
   Plus,
@@ -18,26 +18,23 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { useDarkMood } from "../../Context/ThemeContext";
-// Import your ThemeContext hook
+import { useBotListQuery } from "../../redux/features/baseApi";
+import { GoLaw } from "react-icons/go";
+
 
 const MessageLayout = () => {
   
     const { darkMode } = useDarkMood();// Use theme from context
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [selectedBot, setSelectedBot] = useState("law");
-  const [isBotDropdownOpen, setBotDropdownOpen] = useState(false);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {data: bots} = useBotListQuery()
   const navigate = useNavigate();
 
-  const bots = [
-    { id: "law", name: "Law Bot", icon: Scale, description: "Legal assistance and advice" },
-    { id: "realstate", name: "Real Estate Bot", icon: Home, description: "Property and real estate guidance" },
-    { id: "primary", name: "Primary School Bot", icon: GraduationCap, description: "Educational support for primary students" },
-  ];
+ 
 
-  const selectedBotData = bots.find((bot) => bot.id === selectedBot);
-  const Icon = selectedBotData?.icon || Scale;
+
 
   const history = [
     { id: 1, title: "Website Development Discussion", time: "10:30 AM" },
@@ -56,6 +53,17 @@ const MessageLayout = () => {
     setIsModalOpen(false);
   };
 
+
+  const handleChatClick = (chat) => {
+    navigate(`/chat/${chat.id}`, {state: chat});
+  }
+
+  const handleBotSelect = (id) =>{
+    console.log(id)
+    const botId = localStorage.setItem("bot_id", id)
+  }
+
+
   return (
     <div className={`flex min-h-screen ${darkMode ? "dark" : ""}`}>
       {/* Sidebar */}
@@ -64,65 +72,39 @@ const MessageLayout = () => {
           isSidebarCollapsed ? "w-24" : "w-80"
         } bg-white dark:bg-[#131221] border-r-2 dark:border-[#656092] border-gray-200 dark:text-[#D0CDEF] text-gray-800 flex flex-col`}
       >
-        {/* Bot Selection Dropdown */}
-        <div className="p-4 mt-5">
-          <div className="border-2 border-gray-200 dark:border-[#656092] rounded-lg p-3">
-            <div className="relative">
-              <button
-                className="w-full flex items-center justify-between p-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
-                onClick={() => setBotDropdownOpen(!isBotDropdownOpen)}
-              >
-                <div className="flex items-center gap-3">
-                  <Icon size={20} />
-                  {!isSidebarCollapsed && (
-                    <div className="text-left">
-                      <div className="font-medium">{selectedBotData?.name}</div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">
-                        {selectedBotData?.description}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <ChevronDown
-                  size={16}
-                  className={`transition-transform duration-200 ${isBotDropdownOpen ? "rotate-180" : ""}`}
-                />
-              </button>
+   
 
-              {isBotDropdownOpen && (
-                <div className="absolute left-0 right-0 mt-2 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-800 py-1 z-10">
-                  {bots.map((bot) => {
-                    const BotIcon = bot.icon;
-                    return (
-                      <button
-                        key={bot.id}
-                        className={`w-full flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 ${
-                          selectedBot === bot.id
-                            ? "bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-400"
-                            : ""
-                        }`}
-                        onClick={() => {
-                          setSelectedBot(bot.id);
-                          setBotDropdownOpen(false);
-                        }}
-                      >
-                        <BotIcon size={20} />
-                        {!isSidebarCollapsed && (
-                          <div className="text-left">
-                            <div className="font-medium">{bot.name}</div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400">
-                              {bot.description}
-                            </div>
-                          </div>
-                        )}
-                      </button>
-                    );
-                  })}
+        {/* dynamic bot showing */}
+        <div className="p-4">
+          <button
+            className="w-full"
+           
+          >
+            <div className="w-full flex items-center justify-center gap-2 border-2  dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg p-4 transition-colors duration-200 cursor-pointer">
+            {
+              bots?.map((bot) =><div key={bot?.id}>
+                <div className="flex items-center gap-2">
+                <GoLaw  size={24}/>
+                <h3 
+                 onClick={() => handleBotSelect(bot?.id)}
+                >{bot?.name}</h3>
                 </div>
-              )}
+              </div>)
+            }
             </div>
-          </div>
+          </button>
         </div>
+
+        {/* showing bots */}
+
+        {/* <div>
+          {
+            bots?.map((bot) => <div key={bot?.id}>
+
+<h1>{bot?.name}</h1>
+            </div>)
+          }
+        </div> */}
 
         {/* New Chat Button */}
         <div className="p-4">
@@ -131,7 +113,7 @@ const MessageLayout = () => {
             onClick={() => {/* Handle new chat */}}
           >
             <Plus size={20} />
-            {!isSidebarCollapsed && <span>New Chat</span>}
+            {!isSidebarCollapsed && <Link>New Chat</Link>}
           </button>
         </div>
 
@@ -141,6 +123,7 @@ const MessageLayout = () => {
           {history.map((chat) => (
             <div
               key={chat.id}
+              onClick={()=>handleChatClick(chat)}
               className="flex items-center gap-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors duration-200"
             >
               {!isSidebarCollapsed && (
@@ -168,10 +151,10 @@ const MessageLayout = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="h-[82px] border-gray-200 bg-white dark:bg-[#1B1744] flex items-center justify-between px-6">
-          <h1 className="text-xl font-semibold dark:text-[#D0CDEF] text-gray-800">
+        <header className="h-[82px] border-gray-200 bg-white dark:bg-[#1B1744] flex items-center justify-end px-6">
+          {/* <h1 className="text-xl font-semibold dark:text-[#D0CDEF] text-gray-800">
             Messages
-          </h1>
+          </h1> */}
 
           {/* User Menu */}
           <div className="relative">

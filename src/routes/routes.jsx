@@ -10,6 +10,7 @@ import Confirmation from "../page/authentication/Confirmation";
 import MessageLayout from "../page/Message/MessageLayout";
 import ChatInterface from "../page/Message/ChatInterface";
 import SignupVerification from "../page/authentication/SignupVerification";
+import ChatHistory from "../page/Message/ChatHistory";
 
 export const router = createBrowserRouter([
   {
@@ -23,9 +24,10 @@ export const router = createBrowserRouter([
   
   },
 
-  {path: '/layout', element: <MessageLayout/>,
+  {path: 'chat', element: <MessageLayout/>,
     children : [
-      {path: 'chat/:id', element: <ChatInterface/>},
+      {index: true, element: <ChatInterface/>},
+      {path: ':id', element: <ChatHistory/>},
 
     ]
     

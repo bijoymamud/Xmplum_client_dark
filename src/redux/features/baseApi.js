@@ -86,6 +86,20 @@ export const baseApi = createApi({
      //loggedIn user profile
      loggeInUser: builder.query({
         query: () => "/users/profile/"
+     }),
+
+     //get bot
+
+     botList: builder.query({
+        query: ()=> "/chat_bot/bot/list/"
+     }),
+
+     sendMessage: builder.mutation({
+        query: (formData)=>({
+            url: "/chat_bot/create-message/",
+            method: "POST",
+            body: formData
+        })
      })
 })
 });
@@ -108,6 +122,12 @@ export const {
 
     //loggedInUserInfo
     useLoggeInUserQuery,
+
+    //bot list
+    useBotListQuery,
+
+    // sendMessage
+    useSendMessageMutation,
 
 } = baseApi;
 
