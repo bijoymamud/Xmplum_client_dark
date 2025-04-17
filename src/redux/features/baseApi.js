@@ -81,9 +81,12 @@ export const baseApi = createApi({
                 method: "POST",
                 body: email
             })
-        })
+        }),
 
-     
+     //loggedIn user profile
+     loggeInUser: builder.query({
+        query: () => "/users/profile/"
+     })
 })
 });
 
@@ -102,6 +105,9 @@ export const {
 
     // resendOTP
     useResendOTPMutation,
+
+    //loggedInUserInfo
+    useLoggeInUserQuery,
 
 } = baseApi;
 

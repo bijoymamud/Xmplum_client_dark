@@ -68,7 +68,7 @@ const Register = () => {
         className="z-[9999]"
       />
 
-      {/* Custom CSS for fallback spinner */}
+     
       <style>{`
         .custom-spinner {
           width: 1.5rem;
