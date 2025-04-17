@@ -118,7 +118,7 @@ const MessageLayout = () => {
         </div>
 
         {/* Chat History */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 ">
           <h1 className="p-3 text-xl font-semibold">History:</h1>
           {history.map((chat) => (
             <div
