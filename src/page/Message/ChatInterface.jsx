@@ -40,7 +40,7 @@ const ChatInterface = () => {
       const response = await sendMessage(formData).unwrap();
       console.log(response?.chat_id)
       dispatch(setChatId(response?.chat_id));
-      dispatch(addChatMessage(response?.chat_id));
+      dispatch(addChatMessage(response?.chats[0]));
     } catch (error) {
       console.log(error)
     }
@@ -56,7 +56,7 @@ const ChatInterface = () => {
 
   // Handle file attachment (placeholder for now)
   const handleFileAttachment = () => {
-    // Implement file upload logic here (e.g., open file picker)
+   
     console.log("File attachment clicked");
   };
 
@@ -64,10 +64,10 @@ const ChatInterface = () => {
     <div className="flex flex-col  h-full bg-gray-100 dark:bg-[#1D1B31]">
       {/* Chat Area */}
       <div
-        className="flex-1 p-4 overflow-y-auto flex flex-col-reverse" // flex-col-reverse to stack messages from bottom to top
+        className="flex-1 p-4  flex flex-col-reverse" 
         ref={chatContainerRef}
       >
-        <div ref={chatEndRef} /> {/* Dummy div to scroll to */}
+        <div ref={chatEndRef} /> 
         {messages.length === 0 ? (
           <div className="flex items-center justify-center flex-1">
         
@@ -75,13 +75,11 @@ const ChatInterface = () => {
         ) : (
           messages
             .slice()
-            .reverse() // Reverse the messages array to display newest at the bottom
+            .reverse() 
             .map((message, index) => (
               <div
                 key={index}
-                className={`flex ${
-                  message.sender === "user" ? "justify-end" : "justify-start"
-                } mb-4`}
+                className="flex flex-col mb-4"
               >
                 <div
                   className={`max-w-xs md:max-w-md p-3 rounded-lg shadow-md ${
@@ -90,14 +88,24 @@ const ChatInterface = () => {
                       : "bg-gray-200 dark:bg-gray-700 dark:text-gray-200 text-gray-800"
                   }`}
                 >
-                  <p>{message.question}</p>
+                  <p>{message?.question}</p>
+                 
+                </div>
+                <div
+                  className={`max-w-xs md:max-w-md p-3 rounded-lg shadow-md ${
+                    message.sender === "user"
+                      ? "dark:bg-[#252244] dark:text-[#D0CDEF]"
+                      : "bg-gray-200 dark:bg-gray-700 dark:text-gray-200 text-gray-800"
+                  }`}
+                >
+            
                   <p>{message.answer}</p>
                 </div>
               </div>
             ))
         )}
       </div>
-      {/* Input Area (Fixed at Bottom) */}
+  
       <div className="p-4 bg-white dark:bg-[#2D2956] border-t border-gray-200 dark:border-gray-700 sticky bottom-0 rounded-full">
         <div className="flex items-center gap-2 max-w-4xl mx-auto">
           {/* File Attachment */}
@@ -133,24 +141,3 @@ const ChatInterface = () => {
 
 export default ChatInterface;
 
-
-// import React from 'react'
-// import { useDispatch, useSelector } from 'react-redux'
-// import { setChatId } from '../../redux/state/sliceChatPage';
-
-// const ChatInterface = () => {
-//   const dispatch = useDispatch();
-//   const botId = useSelector((state)=>state.chatpage.botId)
-//   console.log(botId)
-
-//   const setInitialChatId =()=>{
-//     // dispatch(setChatId())
-//   }
-//   return (
-//     <div>
-//       <h1 className='dark:text-[#D0CDEF]'>Chat page will go here</h1>
-//     </div>
-//   )
-// }
-
-// export default ChatInterface
