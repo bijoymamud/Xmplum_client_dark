@@ -11,6 +11,7 @@ import MessageLayout from "../page/Message/MessageLayout";
 import ChatInterface from "../page/Message/ChatInterface";
 import SignupVerification from "../page/authentication/SignupVerification";
 import ChatHistory from "../page/Message/ChatHistory";
+import UserProfile from "../page/Profile/UserProfile";
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
     element: <Main />,
     children: [
       {path: "/", element: <Home />},
+   
       
     ],
 
@@ -28,6 +30,7 @@ export const router = createBrowserRouter([
     children : [
       {index: true, element: <ChatInterface/>},
       {path: ':id', element: <ChatHistory/>},
+      {path: 'profile', element: <UserProfile/>},
 
     ]
     

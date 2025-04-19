@@ -18,7 +18,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { useDarkMood } from "../../Context/ThemeContext";
-import { useBotListQuery } from "../../redux/features/baseApi";
+import { useBotListQuery, useLoggeInUserQuery } from "../../redux/features/baseApi";
 import { GoLaw } from "react-icons/go";
 import { useDispatch } from "react-redux";
 import { clearChatList } from "../../redux/state/sliceChatPage";
@@ -26,10 +26,10 @@ import { clearChatList } from "../../redux/state/sliceChatPage";
 
 const MessageLayout = () => {
   
-    const { darkMode } = useDarkMood();// Use theme from context
+  const { darkMode } = useDarkMood();// Use theme from context
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
-  
+  const {data: userInfo} = useLoggeInUserQuery()  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {data: bots} = useBotListQuery()
   const navigate = useNavigate();
@@ -174,29 +174,29 @@ const MessageLayout = () => {
 
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 dark:bg-[#24214A] bg-white rounded-[5px] dark:shadow-gray-700 border dark:border-gray-800 py-1">
-                <div className="px-4 py-2 dark:border-b border-[#D0CDEF]">
-                  <p className="font-medium dark:text-[#D0CDEF]">John Doe</p>
+                <div className="px-4 py-2 dark:border-b border-[#D0CDEF] cursor-pointer">
+                  <p className="font-semibold dark:text-[#D0CDEF] ">{userInfo?.full_name}</p>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    john@example.com
+                    {userInfo?.email}
                   </p>
                 </div>
-                <button className="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-[#D0CDEF] transition-colors duration-200">
+                <button className="w-full cursor-pointer flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-[#D0CDEF] transition-colors duration-200">
                   <User size={16} />
-                  <span>Profile</span>
+                  <button className="btn" onClick={()=>document.getElementById('profile').showModal()}>Profile</button>
+<dialog id="profile" className="modal">
+  <div className="modal-box">
+    <form method="dialog">
+      {/* if there is a button in form, it will close the modal */}
+      <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <h3 className="font-bold text-lg">Hello!</h3>
+    <p className="py-4">Press ESC key or click on ✕ button to close</p>
+  </div>
+</dialog>
                 </button>
-                <button className="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-[#D0CDEF] transition-colors duration-200">
-                  <Settings size={16} />
-                  <span>Settings</span>
-                </button>
+           
                 <button
-                  className="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-[#D0CDEF] transition-colors duration-200"
-                  onClick={toggleTheme}
-                >
-                  {darkMode ? <Sun size={16} /> : <Moon size={16} />}
-                  <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>
-                </button>
-                <button
-                  className="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-600 text-red-600 transition-colors duration-200"
+                  className="w-full cursor-pointer flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-600 text-red-600 transition-colors duration-200"
                   onClick={() => setIsModalOpen(true)}
                 >
                   <LogOut size={16} />

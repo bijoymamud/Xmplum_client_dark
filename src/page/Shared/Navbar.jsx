@@ -316,7 +316,7 @@ const Navbar = () => {
                   />
                 </button>
                 {isDropdownOpen && (
-                  <div className="absolute right-0 top-14 w-48 bg-white dark:bg-[#221F42] rounded-md shadow-lg py-2 z-50 animate-dropdown">
+                  <div className="absolute right-0 top-14 w-48 bg-white dark:bg-[#221F42] rounded-md shadow-lg py-2 z-50 animate-dropdown border border-gray-400">
                     {dropdownItems.map((item) => (
                       <Link
                         key={item.name}
