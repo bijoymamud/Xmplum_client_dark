@@ -1,7 +1,6 @@
 
 
 
-
 import React, { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import {
@@ -182,17 +181,7 @@ const MessageLayout = () => {
                 </div>
                 <button className="w-full cursor-pointer flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-[#D0CDEF] transition-colors duration-200">
                   <User size={16} />
-                  <button className="btn" onClick={()=>document.getElementById('profile').showModal()}>Profile</button>
-<dialog id="profile" className="modal">
-  <div className="modal-box">
-    <form method="dialog">
-      {/* if there is a button in form, it will close the modal */}
-      <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <h3 className="font-bold text-lg">Hello!</h3>
-    <p className="py-4">Press ESC key or click on ✕ button to close</p>
-  </div>
-</dialog>
+                  <Link to='/profile'>Profile</Link>
                 </button>
            
                 <button

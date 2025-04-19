@@ -26,16 +26,44 @@ export const router = createBrowserRouter([
   
   },
 
-  {path: 'chat', element: <MessageLayout/>,
-    children : [
-      {index: true, element: <ChatInterface/>},
-      {path: ':id', element: <ChatHistory/>},
-      {path: 'profile', element: <UserProfile/>},
+  // {path: 'chat', element: <MessageLayout/>,
+  //   children : [
+  //     {index: true, element: <ChatInterface/>},
+  //     {path: ':id', element: <ChatHistory/>},
+  //     {path: 'profile', element: <UserProfile/>},
 
-    ]
+  //   ]
+
     
-  },
+    
+  // },
 
+  // {
+  //   path: 'profile',
+  //   element: (
+  //     <MessageLayout>
+  //       <UserProfile />
+  //     </MessageLayout>
+  //   ),
+  // },
+
+  {
+    path: '/',
+    element: <MessageLayout />, // This wraps both /chat and /profile
+    children: [
+      {
+        path: 'chat',
+        children: [
+          { index: true, element: <ChatInterface /> },
+          { path: ':id', element: <ChatHistory /> },
+        ],
+      },
+      {
+        path: 'profile',
+        element: <UserProfile />,
+      },
+    ],
+  },  
 
   {
     path:'/register',

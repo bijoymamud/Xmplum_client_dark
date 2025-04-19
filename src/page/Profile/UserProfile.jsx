@@ -1,107 +1,121 @@
 
 
-export default function UserProfile() {
+
+
+
+import React, { useState, useEffect } from 'react'
+import { useLoggeInUserQuery } from '../../redux/features/baseApi'
+import { IoLocation, IoMailUnreadOutline } from 'react-icons/io5'
+import { SlCalender } from 'react-icons/sl'
+import { IoMdCreate } from 'react-icons/io'
+import { MdOutlineSaveAs } from 'react-icons/md'
+import { RiEdit2Fill } from 'react-icons/ri'
+
+const UserProfile = () => {
+  const { data: userInfo } = useLoggeInUserQuery()
+
+  const [isEditing, setIsEditing] = useState(false)
+  const [newName, setNewName] = useState('')
+  const [image, setImage] = useState(null)
+
+  useEffect(() => {
+    if (userInfo?.full_name) {
+      setNewName(userInfo.full_name)
+    }
+  }, [userInfo])
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setImage(URL.createObjectURL(file))
+    }
+  }
+
+  const handleNameChange = () => setIsEditing(true)
+  const handleNameSave = () => {
+    setIsEditing(false)
+    
+  }
+
   return (
-    <div className="card max-w-md mx-auto overflow-hidden">
-      <div className="h-24 bg-gradient-to-r from-slate-100 to-slate-200" />
-      <div className="px-6 pb-6">
-        <div className="flex justify-between items-start -mt-12">
-          <div className="avatar h-20 w-20 border-4 border-background">
+    <section className="min-h-screen flex items-center justify-center bg-base-200 px-4 py-10">
+      <div className="bg-base-100 p-6 rounded-2xl shadow-xl w-full max-w-3xl space-y-6">
+        {/* Profile Picture + Info */}
+        <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6">
+          <div className="relative group">
             <img
-              className="rounded-full"
-              src="/placeholder.svg?height=80&width=80"
-              alt="Sarah Johnson"
+              src={
+                image ||
+                'https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg'
+              }
+              alt="Profile"
+              className="w-[150px] h-[150px] object-cover rounded-full border-4 border-white shadow-md cursor-pointer"
+              onClick={() => document.getElementById('image-upload').click()}
             />
-            <span className="text-lg font-bold">SJ</span>
-          </div>
-        
-        </div>
-
-        <div className="mt-3">
-          <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold">Sarah Johnson</h2>
-            <span className="badge badge-secondary ml-1">Product Designer</span>
-          </div>
-
-          <div className="flex items-center gap-4 text-sm text-muted mt-1">
-            <div className="flex items-center">
-             
-              <span>San Francisco</span>
-            </div>
-            <div className="flex items-center">
-              
-              <span>Acme Inc.</span>
-            </div>
-            <div className="flex items-center">
-            
-              <span>Since 2021</span>
+            <input
+              id="image-upload"
+              type="file"
+              className="hidden"
+              onChange={handleImageChange}
+            />
+            <div
+              className="absolute top-1 right-1 bg-white p-1.5 rounded-full shadow-md cursor-pointer group-hover:scale-110 transition"
+              onClick={() => document.getElementById('image-upload').click()}
+              title="Change photo"
+            >
+              <IoMdCreate size={18} color="#7376ff" />
             </div>
           </div>
 
-          <p className="text-sm mt-4">
-            Creating intuitive digital experiences with a focus on accessibility and user-centered design systems.
-          </p>
-        </div>
-
-        {/* DaisyUI Tabs */}
-        <div className="tabs mt-6">
-          <a className="tab tab-lifted tab-active">Stats</a>
-          <a className="tab tab-lifted">Projects</a>
-          <a className="tab tab-lifted">About</a>
-        </div>
-
-        {/* Stats Content */}
-        <div className="mt-6">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="flex flex-col items-center p-3 bg-slate-50 rounded-lg">
-              <span className="text-xl font-bold">142</span>
-              <span className="text-xs text-muted">Posts</span>
+          <div className="text-sm text-base-content/80 text-center sm:text-right space-y-2">
+            <div className="flex items-center justify-center sm:justify-end gap-2">
+              <span className='dark:text-[#D0CDEF]'>Los Angeles</span>
+              <IoLocation size={20} className="text-[#7376ff]" />
             </div>
-            <div className="flex flex-col items-center p-3 bg-slate-50 rounded-lg">
-              <span className="text-xl font-bold">3.2k</span>
-              <span className="text-xs text-muted">Followers</span>
+            <div className="flex items-center justify-center sm:justify-end gap-2">
+              <span className='dark:text-[#D0CDEF]'>Joined on 18 Aug, 2024</span>
+              <SlCalender size={18} className="text-[#7376ff]" />
             </div>
-            <div className="flex flex-col items-center p-3 bg-slate-50 rounded-lg">
-              <span className="text-xl font-bold">268</span>
-              <span className="text-xs text-muted">Following</span>
-            </div>
+            <div className="font-medium dark:text-[#D0CDEF]">{userInfo?.username}</div>
           </div>
         </div>
 
-        {/* Projects Content */}
-        <div className="mt-6 space-y-2">
-          <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-            <span className="font-medium">Design System</span>
-            <span className="badge badge-accent">Active</span>
+        {/* Name and Email */}
+        <div className="text-center sm:text-left">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-2">
+            {isEditing ? (
+              <>
+                <input
+                  type="text"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  className="border-b border-[#7376ff] dark:text-[#D0CDEF] bg-transparent text-xl font-semibold focus:outline-none w-full max-w-sm text-center sm:text-left"
+                />
+                <button
+                  onClick={handleNameSave}
+                  className="text-sm text-[#7376ff] hover:underline"
+                >
+                  <MdOutlineSaveAs size={24} />
+                </button>
+              </>
+            ) : (
+              <>
+                <h2 className="text-2xl font-bold dark:text-[#D0CDEF]">{newName}</h2>
+                <button
+                  onClick={handleNameChange}
+                  className="text-sm text-[#7376ff] hover:underline"
+                >
+                  <RiEdit2Fill size={24}/> 
+                </button>
+              </>
+            )}
           </div>
-          <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-            <span className="font-medium">Mobile App Redesign</span>
-            <span className="badge badge-outline">Completed</span>
-          </div>
-          <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-            <span className="font-medium">Website Prototype</span>
-            <span className="badge badge-outline">Completed</span>
-          </div>
-        </div>
-
-        {/* About Content */}
-        <div className="mt-6 space-y-4">
-          <p className="text-sm">
-            Product designer with 5+ years of experience creating user-centered digital products. Specialized in
-            design systems, accessibility, and interactive prototyping.
-          </p>
-          <div>
-            <h3 className="text-sm font-medium mb-2">Skills</h3>
-            <div className="flex flex-wrap gap-2">
-              <span className="badge badge-secondary">UI Design</span>
-              <span className="badge badge-secondary">UX Research</span>
-              <span className="badge badge-secondary">Prototyping</span>
-              <span className="badge badge-secondary">Design Systems</span>
-              <span className="badge badge-secondary">Figma</span>
-            </div>
-          </div>
+          <p className="text-base-content/70 mt-1 dark:text-[#D0CDEF] flex items-center gap-2"><IoMailUnreadOutline size={20}/> {userInfo?.email}</p>
         </div>
       </div>
-    </div>
-  );
+    </section>
+  )
 }
+
+export default UserProfile
+
