@@ -21,6 +21,7 @@ import { useBotListQuery, useLoggeInUserQuery } from "../../redux/features/baseA
 import { GoLaw } from "react-icons/go";
 import { useDispatch } from "react-redux";
 import { clearChatList } from "../../redux/state/sliceChatPage";
+import { RiHomeOfficeLine } from "react-icons/ri";
 
 
 const MessageLayout = () => {
@@ -179,6 +180,10 @@ const MessageLayout = () => {
                     {userInfo?.email}
                   </p>
                 </div>
+                <button className="w-full cursor-pointer flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-[#D0CDEF] transition-colors duration-200">
+                  <RiHomeOfficeLine  size={16} />
+                  <Link to='/'>Home</Link>
+                </button>
                 <button className="w-full cursor-pointer flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-[#D0CDEF] transition-colors duration-200">
                   <User size={16} />
                   <Link to='/profile'>Profile</Link>
