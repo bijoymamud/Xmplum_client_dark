@@ -144,12 +144,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Send, Paperclip, Loader2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { useSendMessageMutation } from "../../redux/features/baseApi";
-import { addChatMessage, setChatId } from "../../redux/state/sliceChatPage";
+import { useGetAllMessageMutation,  useSendMessageMutation } from "../../redux/features/baseApi";
+import { addChatMessage, addChatMessageMany, setChatId } from "../../redux/state/sliceChatPage";
+import {  useSearchParams } from "react-router-dom";
 
 const ChatInterface = () => {
   const dispatch = useDispatch();
-  const chatId = useSelector((state) => state.chatpage.chatId);
+  // const chatId = useSelector((state) => state.chatpage.chatId);
   const botId = useSelector((state) => state.chatpage.botId);
   const messages = useSelector((state) => state.chatpage.chatList);
   const [input, setInput] = useState("");
@@ -157,6 +158,8 @@ const ChatInterface = () => {
   const chatEndRef = useRef(null);
   const chatContainerRef = useRef(null);
   const [sendMessage] = useSendMessageMutation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [getAllMessage] = useGetAllMessageMutation()
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -175,12 +178,17 @@ const ChatInterface = () => {
     setIsBotTyping(true);
 
     const formData = new FormData();
+    const chatId = searchParams.get("id")
     formData.append("question", input.trim());
     formData.append("chat_id", chatId);
     formData.append("bot_id", botId);
 
     try {
       const response = await sendMessage(formData).unwrap();
+
+      //setSearchParams
+      setSearchParams({ id: response?.chat_id });
+      console.log(response)
       dispatch(setChatId(response?.chat_id));
       dispatch(
         addChatMessage({
@@ -203,6 +211,44 @@ const ChatInterface = () => {
   const handleFileAttachment = () => {
     console.log("File attachment clicked");
   };
+  const splitQuestionsAndAnswers = (response) => {
+    const result = [];
+  
+    response.forEach(item => {
+      // Add the question as an object
+      result.push({
+        sender: 'user',
+        question: item.question
+      });
+  
+      // Add the answer as an object
+      result.push({
+        sender: 'bot',
+        answer: item.answer
+      });
+    });
+  
+    return result;
+  };
+  
+  useEffect(() => {
+    // Get the chatId from the searchParams
+    const chatId = searchParams.get("id");
+  
+    // Check if chatId exists and if messages array is empty
+    if (messages?.length === 0 && chatId) {
+      const initialChatLoad = async () => {
+        const response = await getAllMessage(chatId).unwrap();
+        console.log('all message get', response);
+  
+        // Dispatch the action to add messages
+        dispatch(addChatMessageMany(splitQuestionsAndAnswers(response)));
+      };
+  
+      // Call the initial chat load function
+      initialChatLoad();
+    }
+  }, [searchParams.get("id")]);
 
   return (
     <div className="flex flex-col h-full bg-gray-100 dark:bg-[#1D1B31]">
@@ -212,11 +258,18 @@ const ChatInterface = () => {
         ref={chatContainerRef}
       >
         {messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-gray-500 dark:text-gray-400">Start a conversation...</p>
+          <div className="flex flex-col items-center justify-center h-full">
+              <img
+                className="w-[150px] rounded-lg shadow-lg mb-10"
+                src="https://i.ibb.co.com/s9CpmcJD/Chatbot-Message-Bubble-removebg-preview.png"
+                alt="Brand Logo"
+              />
+            <h1 className="text-gray-500 text-4xl font-bold dark:text-gray-200 mb-3">Your Smart Legal Companion</h1>
+
+            <p className="text-center dark:text-gray-200 w-3/4">Get accurate, data-driven answers to your legal questions — powered by real law references, tailored for clarity and confidence. Start chatting to explore your rights, obligations, and more.</p>
           </div>
         ) : (
-          messages.map((message, index) => (
+          messages.slice().reverse().map((message, index) => (
             <div
               key={index}
               className={`flex mb-4 items-end gap-2 ${
@@ -269,11 +322,11 @@ const ChatInterface = () => {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 bg-white dark:bg-[#2D2956] border-t border-gray-200 dark:border-gray-700 sticky bottom-0">
-        <div className="flex items-center gap-2 max-w-4xl mx-auto">
+      <div className="p-4 bg-white rounded-full dark:bg-[#2D2956] border-t border-gray-200 dark:border-gray-700 sticky bottom-0">
+        <div className="flex items-center gap-2  mx-auto">
           <button
             onClick={handleFileAttachment}
-            className="p-2 dark:text-[#6A62C3] text-gray-800 transition-colors duration-200"
+            className="p-2 cursor-pointer dark:hover:bg-gray-700 rounded-full dark:text-[#6A62C3] text-gray-800 transition-colors duration-200"
           >
             <Paperclip size={28} />
           </button>
@@ -284,12 +337,12 @@ const ChatInterface = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type your message..."
-            className="flex-1 p-3 rounded-full ps-5 bg-gray-100 dark:bg-[#171430] text-gray-800 dark:text-[#D0CDEF] outline-none focus:ring-2 focus:ring-[#D0CDEF] transition-all duration-200"
+            className="flex-1  p-3 rounded-full ps-5 bg-gray-100 dark:bg-[#171430] text-gray-800 dark:text-[#D0CDEF] outline-none focus:ring-1 focus:ring-[#605d7a] transition-all duration-200"
           />
 
           <button
             onClick={handleSendMessage}
-            className="p-2 dark:text-[#6A62C3] text-gray-800 transition-colors duration-200"
+            className="p-2 cursor-pointer dark:hover:bg-gray-700 rounded-full dark:text-[#6A62C3] text-gray-800 transition-colors duration-200"
           >
             <Send size={28} />
           </button>

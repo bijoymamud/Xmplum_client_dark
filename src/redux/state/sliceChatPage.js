@@ -12,12 +12,18 @@ const sliceChatPage = createSlice({
             state.chatId = action.payload;
         },
         addChatMessage: (state, action) =>{
-            state.chatList = [...state.chatList, action.payload]
+            state.chatList = [...state.chatList,action.payload]
+        },
+        addChatMessageMany: (state, action) =>{
+            state.chatList = [...action.payload]
+        },
+        clearChatList: (state) =>{
+            state.chatList = []
         },
         
     }
 })
-export const  {setChatId, setBotId, addChatMessage} = sliceChatPage.actions
+export const  {setChatId, setBotId, addChatMessage, addChatMessageMany, clearChatList} = sliceChatPage.actions
 export default sliceChatPage.reducer;
 
 

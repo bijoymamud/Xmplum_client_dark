@@ -100,6 +100,13 @@ export const baseApi = createApi({
             method: "POST",
             body: formData
         })
+     }),
+
+     getAllMessage: builder.mutation({
+        query: (chatId)=>({
+            url: `/chat_bot/get-messages/${chatId}/`,
+            method: "GET",
+        })
      })
 })
 });
@@ -128,6 +135,9 @@ export const {
 
     // sendMessage
     useSendMessageMutation,
+
+    //getAllChats
+    useGetAllMessageMutation
 
 } = baseApi;
 

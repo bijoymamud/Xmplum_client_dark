@@ -20,6 +20,8 @@ import {
 import { useDarkMood } from "../../Context/ThemeContext";
 import { useBotListQuery } from "../../redux/features/baseApi";
 import { GoLaw } from "react-icons/go";
+import { useDispatch } from "react-redux";
+import { clearChatList } from "../../redux/state/sliceChatPage";
 
 
 const MessageLayout = () => {
@@ -31,6 +33,7 @@ const MessageLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {data: bots} = useBotListQuery()
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
  
 
@@ -38,8 +41,6 @@ const MessageLayout = () => {
 
   const history = [
     { id: 1, title: "Website Development Discussion", time: "10:30 AM" },
-    { id: 2, title: "UI/UX Design Review", time: "Yesterday" },
-    { id: 3, title: "Project Timeline Planning", time: "2 days ago" },
     { id: 4, title: "API Integration Meeting", time: "3 days ago" },
     { id: 5, title: "Code Review Session", time: "4 days ago" },
   ];
@@ -55,7 +56,8 @@ const MessageLayout = () => {
 
 
   const handleChatClick = (chat) => {
-    navigate(`/chat/${chat.id}`, {state: chat});
+    dispatch(clearChatList())
+    navigate(`/chat/?id=${chat.id}`);
   }
 
   const handleBotSelect = (id) =>{
@@ -108,13 +110,13 @@ const MessageLayout = () => {
 
         {/* New Chat Button */}
         <div className="p-4">
-          <button
+          <Link to="/chat"
             className="w-full flex items-center justify-center gap-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg p-3 transition-colors duration-200"
-            onClick={() => {/* Handle new chat */}}
+           reloadDocument
           >
             <Plus size={20} />
-            {!isSidebarCollapsed && <Link>New Chat</Link>}
-          </button>
+            {!isSidebarCollapsed && <span>New Chat</span>}
+          </Link>
         </div>
 
         {/* Chat History */}
