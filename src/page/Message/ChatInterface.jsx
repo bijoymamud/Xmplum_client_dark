@@ -495,13 +495,18 @@ const ChatInterface = () => {
   const [input, setInput] = useState("");
   const [isBotTyping, setIsBotTyping] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [pdfError, setPdfError] = useState(null);
   const chatEndRef = useRef(null);
   const chatContainerRef = useRef(null);
   const fileInputRef = useRef(null);
   const [sendMessage] = useSendMessageMutation();
-  
   const [searchParams, setSearchParams] = useSearchParams();
   const [getAllMessage] = useGetAllMessageMutation();
+
+  // Base URL for the backend
+  const BASE_URL = "http://192.168.10.131:8000";
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -561,12 +566,15 @@ const ChatInterface = () => {
 
       // Update user message with question_file link from response
       if (response?.chats[0]?.question_file) {
+        const fullPdfUrl = response.chats[0].question_file.startsWith("http")
+          ? response.chats[0].question_file
+          : `${BASE_URL}${response.chats[0].question_file}`;
         dispatch(
           updateChatMessage({
             id: messageData.id,
             updatedMessage: {
               ...messageData,
-              question_file: response.chats[0].question_file, // Full URL from response
+              question_file: fullPdfUrl, // Full URL
             },
           })
         );
@@ -594,15 +602,36 @@ const ChatInterface = () => {
     if (e.key === "Enter") handleSendMessage();
   };
 
+  const handlePdfClick = (url) => {
+    setPdfUrl(url);
+    setPdfError(null);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setPdfUrl("");
+    setPdfError(null);
+  };
+
+  const handleIframeError = () => {
+    setPdfError("Failed to load PDF. The file may not exist or is inaccessible.");
+  };
+
   const splitQuestionsAndAnswers = (response) => {
     const result = [];
     response.forEach((item) => {
+      const fullPdfUrl = item.question_file
+        ? item.question_file.startsWith("http")
+          ? item.question_file
+          : `${BASE_URL}${item.question_file}`
+        : null;
       result.push({
         sender: "user",
         question: item.question,
         id: item.id,
-        ...(item.question_file && {
-          question_file: item.question_file, // Keep full URL
+        ...(fullPdfUrl && {
+          question_file: fullPdfUrl, // Full URL
         }),
       });
       result.push({
@@ -625,146 +654,176 @@ const ChatInterface = () => {
   }, [searchParams.get("id")]);
 
   return (
-    <div className="flex flex-col h-full bg-gray-100 dark:bg-[#1D1B31]">
-      {/* Chat Area */}
-      <div className="flex-1 p-4 overflow-y-auto h-[70vh]" ref={chatContainerRef}>
-        {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full">
-            <img
-              className="w-[150px] rounded-lg shadow-lg mb-10"
-              src="https://i.ibb.co.com/s9CpmcJD/Chatbot-Message-Bubble-removebg-preview.png"
-              alt="Brand Logo"
-            />
-            <h1 className="text-gray-500 text-4xl font-bold dark:text-gray-200 mb-3">
-              Your Smart Legal Companion
-            </h1>
-            <p className="text-center dark:text-gray-200 w-3/4">
-              Get accurate, data-driven answers to your legal questions — powered by real law references,
-              tailored for clarity and confidence. Start chatting to explore your rights, obligations, and more.
-            </p>
-          </div>
-        ) : (
-          messages.slice().reverse().map((message, index) => (
-            <div
-              key={message.id || index}
-              className={`flex mb-4 items-end gap-2 ${
-                message.sender === "user" ? "justify-end" : "justify-start"
-              }`}
+    <div className="flex h-full">
+      {/* PDF Modal */}
+      {isModalOpen && (
+        <div className="w-full h-full bg-white dark:bg-[#2D2956] flex flex-col fixed top-0 left-0 z-50">
+          <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">PDF Viewer</h2>
+            <button
+              onClick={closeModal}
+              className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
             >
-              {message.sender === "bot" && (
-                <img
-                  src="https://png.pngtree.com/png-vector/20220622/ourmid/pngtree-chatbot-color-icon-chat-bot-png-image_5258006.png"
-                  alt="Bot"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-              )}
+              <X size={24} className="text-gray-800 dark:text-gray-200" />
+            </button>
+          </div>
+          <div className="flex-1 p-4 overflow-auto">
+            {pdfError ? (
+              <div className="flex items-center justify-center h-full text-red-600 dark:text-red-400">
+                <p>{pdfError}</p>
+              </div>
+            ) : (
+              <iframe
+                src={pdfUrl}
+                title="PDF Viewer"
+                className="w-full h-full border-none"
+                onError={handleIframeError}
+              />
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Chat Interface */}
+      <div className={`flex flex-col h-full bg-gray-100 dark:bg-[#1D1B31] ${isModalOpen ? "hidden" : "w-full"}`}>
+        {/* Chat Area */}
+        <div className="flex-1 p-4 overflow-y-auto h-[70vh]" ref={chatContainerRef}>
+          {messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <img
+                className="w-[150px] rounded-lg shadow-lg mb-10"
+                src="https://i.ibb.co.com/s9CpmcJD/Chatbot-Message-Bubble-removebg-preview.png"
+                alt="Brand Logo"
+              />
+              <h1 className="text-gray-500 text-4xl font-bold dark:text-gray-200 mb-3">
+                Your Smart Legal Companion
+              </h1>
+              <p className="text-center dark:text-gray-200 w-3/4">
+                Get accurate, data-driven answers to your legal questions — powered by real law references,
+                tailored for clarity and confidence. Start chatting to explore your rights, obligations, and more.
+              </p>
+            </div>
+          ) : (
+            messages.slice().map((message, index) => (
               <div
-                className={`max-w-xs md:max-w-md p-3 rounded-lg shadow-md ${
-                  message.sender === "user"
-                    ? "bg-[#6A62C3] text-white"
-                    : "bg-gray-200 dark:bg-gray-700 dark:text-gray-200 text-gray-800"
+                key={message.id || index}
+                className={`flex mb-4 items-end gap-2 ${
+                  message.sender === "user" ? "justify-end" : "justify-start"
                 }`}
               >
-                <p>{message.sender === "user" ? message.question : message.answer}</p>
-                {message.question_file && (
-                  <div className="mt-2 flex items-center gap-2">
-                    <img
-                      src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
-                      alt="PDF"
-                      className="w-6 h-6"
-                    />
-                    <a
-                      href={message.question_file}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm truncate underline hover:text-blue-200"
-                    >
-                      {message.question_file.split("/").pop()}
-                    </a>
-                  </div>
+                {message.sender === "bot" && (
+                  <img
+                    src="https://png.pngtree.com/png-vector/20220622/ourmid/pngtree-chatbot-color-icon-chat-bot-png-image_5258006.png"
+                    alt="Bot"
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                )}
+                <div
+                  className={`max-w-xs md:max-w-md p-3 rounded-lg shadow-md ${
+                    message.sender === "user"
+                      ? "bg-[#6A62C3] text-white"
+                      : "bg-gray-200 dark:bg-gray-700 dark:text-gray-200 text-gray-800"
+                  }`}
+                >
+                  <p>{message.sender === "user" ? message.question : message.answer}</p>
+                  {message.question_file && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <img
+                        src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
+                        alt="PDF"
+                        className="w-6 h-6"
+                      />
+                      <button
+                        onClick={() => handlePdfClick(message.question_file)}
+                        className="text-sm truncate underline hover:text-blue-200"
+                      >
+                        {message.question_file.split("/").pop()}
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {message.sender === "user" && (
+                  <img
+                    src="https://freesvg.org/img/publicdomainq-0006224bvmrqd.png"
+                    alt="You"
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
                 )}
               </div>
-              {message.sender === "user" && (
-                <img
-                  src="https://freesvg.org/img/publicdomainq-0006224bvmrqd.png"
-                  alt="You"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-              )}
-            </div>
-          ))
-        )}
+            ))
+          )}
 
-        {/* Bot Typing Loader */}
-        {isBotTyping && (
-          <div className="flex items-end gap-2 mb-4">
-            <img
-              src="https://png.pngtree.com/png-vector/20220622/ourmid/pngtree-chatbot-color-icon-chat-bot-png-image_5258006.png"
-              alt="Bot"
-              className="w-8 h-8 rounded-full object-cover"
-            />
-            <div className="flex items-center justify-center px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 shadow-md text-gray-800 dark:text-gray-200">
-              <Loader2 className="animate-spin mr-2 w-4 h-4" />
-              Typing...
-            </div>
-          </div>
-        )}
-
-        <div ref={chatEndRef} />
-      </div>
-
-      {/* Input Area */}
-      <div className="p-4 bg-white rounded-full dark:bg-[#2D2956] border-t border-gray-200 dark:border-gray-700 sticky bottom-0">
-        <div className="flex items-center gap-2 mx-auto">
-          <button
-            onClick={handleFileAttachment}
-            className="p-2 cursor-pointer dark:hover:bg-gray-700 rounded-full dark:text-[#6A62C3] text-gray-800 transition-colors duration-200"
-          >
-            <Paperclip size={28} />
-          </button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept="application/pdf"
-            className="hidden"
-          />
-
-          <div className="flex-1 flex flex-col">
-            {selectedFile && (
-              <div className="flex items-center gap-2 mb-2 bg-gray-100 dark:bg-[#171430] p-2 rounded-lg">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
-                  alt="PDF"
-                  className="w-6 h-6"
-                />
-                <span className="text-sm text-gray-800 dark:text-[#D0CDEF] truncate">
-                  {selectedFile.name}
-                </span>
-                <button
-                  onClick={removeSelectedFile}
-                  className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
-                >
-                  <X size={16} />
-                </button>
+          {/* Bot Typing Loader */}
+          {isBotTyping && (
+            <div className="flex items-end gap-2 mb-4">
+              <img
+                src="https://png.pngtree.com/png-vector/20220622/ourmid/pngtree-chatbot-color-icon-chat-bot-png-image_5258006.png"
+                alt="Bot"
+                className="w-8 h-8 rounded-full object-cover"
+              />
+              <div className="flex items-center justify-center px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 shadow-md text-gray-800 dark:text-gray-200">
+                <Loader2 className="animate-spin mr-2 w-4 h-4" />
+                Typing...
               </div>
-            )}
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type your message..."
-              className="flex-1 p-3 rounded-full ps-5 bg-gray-100 dark:bg-[#171430] text-gray-800 dark:text-[#D0CDEF] outline-none focus:ring-1 focus:ring-[#605d7a] transition-all duration-200"
-            />
-          </div>
+            </div>
+          )}
 
-          <button
-            onClick={handleSendMessage}
-            className="p-2 cursor-pointer dark:hover:bg-gray-700 rounded-full dark:text-[#6A62C3] text-gray-800 transition-colors duration-200"
-          >
-            <Send size={28} />
-          </button>
+          <div ref={chatEndRef} />
+        </div>
+
+        {/* Input Area */}
+        <div className="p-4 bg-white rounded-full dark:bg-[#2D2956] border-t border-gray-200 dark:border-gray-700 sticky bottom-0">
+          <div className="flex items-center gap-2 mx-auto">
+            <button
+              onClick={handleFileAttachment}
+              className="p-2 cursor-pointer dark:hover:bg-gray-700 rounded-full dark:text-[#6A62C3] text-gray-800 transition-colors duration-200"
+            >
+              <Paperclip size={28} />
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="application/pdf"
+              className="hidden"
+            />
+
+            <div className="flex-1 flex flex-col">
+              {selectedFile && (
+                <div className="flex items-center gap-2 mb-2 bg-gray-100 dark:bg-[#171430] p-2 rounded-lg">
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
+                    alt="PDF"
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm text-gray-800 dark:text-[#D0CDEF] truncate">
+                    {selectedFile.name}
+                  </span>
+                  <button
+                    onClick={removeSelectedFile}
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              )}
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Type your message..."
+                className="flex-1 p-3 rounded-full ps-5 bg-gray-100 dark:bg-[#171430] text-gray-800 dark:text-[#D0CDEF] outline-none focus:ring-1 focus:ring-[#605d7a] transition-all duration-200"
+              />
+            </div>
+
+            <button
+              onClick={handleSendMessage}
+              className="p-2 cursor-pointer dark:hover:bg-gray-700 rounded-full dark:text-[#6A62C3] text-gray-800 transition-colors duration-200"
+            >
+              <Send size={28} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
