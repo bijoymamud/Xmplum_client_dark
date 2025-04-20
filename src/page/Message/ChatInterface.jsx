@@ -499,6 +499,7 @@ const ChatInterface = () => {
   const chatContainerRef = useRef(null);
   const fileInputRef = useRef(null);
   const [sendMessage] = useSendMessageMutation();
+  
   const [searchParams, setSearchParams] = useSearchParams();
   const [getAllMessage] = useGetAllMessageMutation();
 
