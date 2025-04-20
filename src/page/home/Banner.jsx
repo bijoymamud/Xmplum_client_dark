@@ -17,13 +17,13 @@ const Banner = () => {
             </div>
 
             <div className='mt-10'>
-              <Link 
-              to={`layout/chat/${id}`}
-              >
+            
+              <Link to="/chat">
               <button className='text-lg dark:text-[#D0CDEF]  font-medium px-[50px] rounded-full py-3 dark:bg-[#271E88] bg-[#271E88] text-[#D0CDEF] cursor-pointer'>
                 Start Now
               </button>
               </Link>
+         
             </div>
           </div>
 

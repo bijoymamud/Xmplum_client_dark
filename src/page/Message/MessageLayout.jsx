@@ -30,6 +30,7 @@ const MessageLayout = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
   const {data: userInfo} = useLoggeInUserQuery()  
+  console.log(userInfo)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {data: bots} = useBotListQuery()
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const MessageLayout = () => {
 
   const history = [
     { id: 1, title: "Website Development Discussion", time: "10:30 AM" },
-    { id: 4, title: "API Integration Meeting", time: "3 days ago" },
+    { id: 51, title: "API Integration Meeting", time: "3 days ago" },
     { id: 5, title: "Code Review Session", time: "4 days ago" },
   ];
 

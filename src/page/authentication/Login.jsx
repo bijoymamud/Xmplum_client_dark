@@ -136,7 +136,7 @@ const Login = () => {
       });
 
       setTimeout(() => {
-        navigate("/");
+        navigate("/chat");
       }, 1000);
     } catch (error) {
       // console.log("error", error);

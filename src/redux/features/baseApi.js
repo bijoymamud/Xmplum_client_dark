@@ -107,7 +107,10 @@ export const baseApi = createApi({
             url: `/chat_bot/get-messages/${chatId}/`,
             method: "GET",
         })
-     })
+     }),
+
+     //post PDF
+     
 })
 });
 
