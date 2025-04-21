@@ -17,7 +17,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { useDarkMood } from "../../Context/ThemeContext";
-import { useBotListQuery, useLoggeInUserQuery } from "../../redux/features/baseApi";
+import { useBotListQuery, useLoggeInUserQuery, usePerticularUserChatListQuery } from "../../redux/features/baseApi";
 import { GoLaw } from "react-icons/go";
 import { useDispatch } from "react-redux";
 import { clearChatList } from "../../redux/state/sliceChatPage";
@@ -29,7 +29,8 @@ const MessageLayout = () => {
   const { darkMode } = useDarkMood();// Use theme from context
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const {data: userInfo} = useLoggeInUserQuery()  
+  const {data: userInfo} = useLoggeInUserQuery() 
+  const {data:history} = usePerticularUserChatListQuery() 
   console.log(userInfo)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {data: bots} = useBotListQuery()
@@ -40,11 +41,11 @@ const MessageLayout = () => {
 
 
 
-  const history = [
-    { id: 1, title: "Website Development Discussion", time: "10:30 AM" },
-    { id: 51, title: "API Integration Meeting", time: "3 days ago" },
-    { id: 5, title: "Code Review Session", time: "4 days ago" },
-  ];
+  // const history = [
+  //   { id: 1, title: "Website Development Discussion", time: "10:30 AM" },
+  //   { id: 51, title: "API Integration Meeting", time: "3 days ago" },
+  //   { id: 5, title: "Code Review Session", time: "4 days ago" },
+  // ];
 
   const toggleTheme = () => setDarkMode(!darkMode);
 
@@ -98,16 +99,7 @@ const MessageLayout = () => {
           </button>
         </div>
 
-        {/* showing bots */}
-
-        {/* <div>
-          {
-            bots?.map((bot) => <div key={bot?.id}>
-
-<h1>{bot?.name}</h1>
-            </div>)
-          }
-        </div> */}
+       
 
         {/* New Chat Button */}
         <div className="p-4">
@@ -123,7 +115,7 @@ const MessageLayout = () => {
         {/* Chat History */}
         <div className="flex-1 ">
           <h1 className="p-3 text-xl font-semibold">History:</h1>
-          {history.map((chat) => (
+          {history?.map((chat) => (
             <div
               key={chat.id}
               onClick={()=>handleChatClick(chat)}
@@ -155,9 +147,7 @@ const MessageLayout = () => {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="h-[82px] border-gray-200 bg-white dark:bg-[#1B1744] flex items-center justify-end px-6">
-          {/* <h1 className="text-xl font-semibold dark:text-[#D0CDEF] text-gray-800">
-            Messages
-          </h1> */}
+         
 
           {/* User Menu */}
           <div className="relative">

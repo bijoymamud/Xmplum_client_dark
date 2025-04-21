@@ -15,7 +15,8 @@ export const baseApi = createApi({
 
     }),
 
-    tagTypes: ['User'],
+    tagTypes: ['User', 'History'],
+
 
     endpoints: (builder) => ({
        
@@ -109,7 +110,12 @@ export const baseApi = createApi({
         })
      }),
 
-     //post PDF
+     //perticular user chat
+
+     perticularUserChatList: builder.query({
+        query: ()=> "/chat_bot/get-chats/",
+        providesTags: ['History']
+     })
      
 })
 });
@@ -140,7 +146,10 @@ export const {
     useSendMessageMutation,
 
     //getAllChats
-    useGetAllMessageMutation
+    useGetAllMessageMutation,
+
+    //perticular user chat
+    usePerticularUserChatListQuery,
 
 } = baseApi;
 

@@ -561,6 +561,7 @@ const ChatInterface = () => {
 
     try {
       const response = await sendMessage(formData).unwrap();
+      console.log("bavkend", response)
       setSearchParams({ id: response?.chat_id });
       dispatch(setChatId(response?.chat_id));
 
