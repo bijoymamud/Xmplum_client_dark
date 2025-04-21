@@ -488,11 +488,11 @@ const Navbar = () => {
         >
           <div
             ref={modalRef}
-            className="bg-white dark:bg-[#221F42] border border-white/20  rounded-lg shadow-lg p-6 w-full max-w-xl pt-20 transform transition-all duration-300 scale-100"
+            className="bg-white dark:bg-[#221F42] border border-white/20  rounded-lg shadow-lg p-6 w-full max-w-xl py-6 transform transition-all duration-300 scale-100"
           >
             <h3
               id="logout-modal-title"
-              className="text-lg font-bold text-gray-900 dark:text-[#D0CDEF] mb-4"
+              className="text-2xl font-bold text-gray-900 dark:text-[#D0CDEF] mb-2"
             >
               Confirm Logout
             </h3>

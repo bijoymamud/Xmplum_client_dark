@@ -137,7 +137,26 @@ export const baseApi = createApi({
      //planDetails
      planDetails: builder.query({
         query: ()=>"/payment/user-subscription/"
-     })
+     }),
+
+     //delete single chat
+    deletePerticularChat: builder.mutation({
+        query: (chatId) =>({
+            url: `/chat_bot/history/${chatId}/delete/`,
+            method: "DELETE",
+        }),
+        invalidatesTags: ['History'],
+    }),
+
+
+     //delete all chat
+     deleteAllChat: builder.mutation({
+        query: () =>({
+            url: "/chat_bot/history/delete/",
+            method: "DELETE",
+        }),
+        invalidatesTags: ['History'],
+     }),
      
 })
 });
@@ -179,6 +198,12 @@ export const {
     //paymentCheckout
     usePaymentCheckoutMutation,
     usePlanDetailsQuery,
+
+    //delete single chat
+    useDeletePerticularChatMutation,
+
+    // deleteAllChat
+    useDeleteAllChatMutation
 
 } = baseApi;
 

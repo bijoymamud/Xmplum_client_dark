@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import {
   Menu,
   Plus,
@@ -12,10 +12,14 @@ import {
   Scale,
   Home,
   GraduationCap,
+  Trash2,
+  TimerReset,
+  CalendarSearch,
 } from "lucide-react";
 import { useDarkMood } from "../../Context/ThemeContext";
 import {
   useBotListQuery,
+  useDeletePerticularChatMutation,
   useLoggeInUserQuery,
   usePerticularUserChatListQuery,
 } from "../../redux/features/baseApi";
@@ -33,11 +37,13 @@ const MessageLayout = () => {
   const { data: history } = usePerticularUserChatListQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: bots } = useBotListQuery();
+  const [deletePerticularChat] = useDeletePerticularChatMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);
   const [chatsLast7Days, setChatsLast7Days] = useState([]);
 const [chatsLast30Days, setChatsLast30Days] = useState([]);
+// const [searchParams] = useSearchParams()
 
   const toggleTheme = () => setDarkMode(!darkMode);
   console.log(history)
@@ -64,6 +70,26 @@ const [chatsLast30Days, setChatsLast30Days] = useState([]);
     console.log("Selected bot ID:", id);
     localStorage.setItem("bot_id", id);
   };
+
+  //delete single chat
+
+  const handleDelete = async (chatId)=>{
+    console.log(chatId);
+
+    try {
+      const response = await deletePerticularChat(chatId).unwrap();
+   
+
+      console.log("Deleted chat response", response);
+      toast.success("Chat deleted successfully!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 
   //for date
   useEffect(() => {
@@ -135,7 +161,7 @@ const [chatsLast30Days, setChatsLast30Days] = useState([]);
         <div className="flex-1">
 
 
-<h2 className="font-bold text-lg text-gray-800 dark:text-white mb-2 ps-5">Last 7 Days</h2>
+<h2 className="font-bold text-lg text-gray-800 dark:text-white mb-2 ps-5 flex items-center gap-2 mt-5"><TimerReset size={24} /> Last 7 Days</h2>
 <div className="pe-5 mb-20">
   {chatsLast7Days.map(chat => (
     <div
@@ -153,13 +179,13 @@ const [chatsLast30Days, setChatsLast30Days] = useState([]);
         className="opacity-0 group-hover:opacity-100 text-gray-500 hover:text-red-500 transition"
         title="Delete chat"
       >
-        🗑️
+        <Trash2 size={16} className="dark:text-red-400 cursor-pointer" />
       </button>
     </div>
   ))}
 </div>
 
-<h2 className="font-bold text-lg text-gray-800 dark:text-white mt-6 mb-2 ps-5">Last 30 Days</h2>
+<h2 className="font-bold text-lg text-gray-800 dark:text-white mt-6 mb-2 ps-5 flex items-center gap-2"> <CalendarSearch size={22} />Last 30 Days</h2>
 <div className="pe-5">
   {chatsLast30Days.map(chat => (
     <div
@@ -177,7 +203,7 @@ const [chatsLast30Days, setChatsLast30Days] = useState([]);
         className="opacity-0 group-hover:opacity-100 text-gray-500 hover:text-red-500 transition"
         title="Delete chat"
       >
-        🗑️
+        <Trash2 size={16} className="dark:text-red-400 cursor-pointer" />
       </button>
     </div>
   ))}
@@ -278,13 +304,13 @@ const [chatsLast30Days, setChatsLast30Days] = useState([]);
       {/* Modal for Logout Confirmation */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-300"
+          className="fixed inset-0 z-50 flex items-center justify-center  bg-opacity-50 backdrop-blur-[3px] transition-opacity duration-300"
           aria-labelledby="logout-modal-title"
           role="dialog"
           aria-modal="true"
         >
           <div
-            className="bg-white dark:bg-[#24214A] rounded-lg shadow-lg p-6 w-full max-w-md transform transition-all duration-300 scale-100"
+            className="bg-white border border-white/20 dark:bg-[#24214A] rounded-lg shadow-lg p-6 w-full max-w-md transform transition-all duration-300 scale-100"
           >
             <h2
               id="logout-modal-title"
