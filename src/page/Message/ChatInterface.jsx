@@ -539,7 +539,7 @@ const ChatInterface = () => {
     const messageData = {
       sender: "user",
       question: input.trim() || "File attachment",
-      id: Date.now(), // Temporary ID for updating later
+      id: Date.now(),
     };
 
     if (selectedFile) {
@@ -564,7 +564,6 @@ const ChatInterface = () => {
       setSearchParams({ id: response?.chat_id });
       dispatch(setChatId(response?.chat_id));
 
-      // Update user message with question_file link from response
       if (response?.chats[0]?.question_file) {
         const fullPdfUrl = response.chats[0].question_file.startsWith("http")
           ? response.chats[0].question_file
@@ -574,7 +573,7 @@ const ChatInterface = () => {
             id: messageData.id,
             updatedMessage: {
               ...messageData,
-              question_file: fullPdfUrl, // Full URL
+              question_file: fullPdfUrl,
             },
           })
         );
@@ -631,7 +630,7 @@ const ChatInterface = () => {
         question: item.question,
         id: item.id,
         ...(fullPdfUrl && {
-          question_file: fullPdfUrl, // Full URL
+          question_file: fullPdfUrl,
         }),
       });
       result.push({
@@ -654,10 +653,10 @@ const ChatInterface = () => {
   }, [searchParams.get("id")]);
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full gap-5">
       {/* PDF Modal */}
       {isModalOpen && (
-        <div className="w-full h-full bg-white dark:bg-[#2D2956] flex flex-col fixed top-0 left-0 z-50">
+        <div className="w-1/2 basis-5/12 h-full bg-white dark:bg-[#2D2956] flex flex-col border-r border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">PDF Viewer</h2>
             <button
@@ -685,7 +684,11 @@ const ChatInterface = () => {
       )}
 
       {/* Chat Interface */}
-      <div className={`flex flex-col h-full bg-gray-100 dark:bg-[#1D1B31] ${isModalOpen ? "hidden" : "w-full"}`}>
+      <div
+        className={`flex flex-col h-[89vh] bg-gray-100 dark:bg-[#1D1B31] transition-all duration-300 ${
+          isModalOpen ? "w-1/2" : "w-full"
+        }`}
+      >
         {/* Chat Area */}
         <div className="flex-1 p-4 overflow-y-auto h-[70vh]" ref={chatContainerRef}>
           {messages.length === 0 ? (
@@ -771,6 +774,25 @@ const ChatInterface = () => {
           <div ref={chatEndRef} />
         </div>
 
+        {selectedFile && (
+                <div className="flex w-1/2 items-center gap-2 mb-2   p-2 rounded-lg">
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
+                    alt="PDF"
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm text-gray-800 dark:text-[#D0CDEF] truncate">
+                    {selectedFile.name}
+                  </span>
+                  <button
+                    onClick={removeSelectedFile}
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
+                  >
+                    <X size={16} className="dark:text-red-500"/>
+                  </button>
+                </div>
+              )}
+
         {/* Input Area */}
         <div className="p-4 bg-white rounded-full dark:bg-[#2D2956] border-t border-gray-200 dark:border-gray-700 sticky bottom-0">
           <div className="flex items-center gap-2 mx-auto">
@@ -788,25 +810,10 @@ const ChatInterface = () => {
               className="hidden"
             />
 
+
+
             <div className="flex-1 flex flex-col">
-              {selectedFile && (
-                <div className="flex items-center gap-2 mb-2 bg-gray-100 dark:bg-[#171430] p-2 rounded-lg">
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
-                    alt="PDF"
-                    className="w-6 h-6"
-                  />
-                  <span className="text-sm text-gray-800 dark:text-[#D0CDEF] truncate">
-                    {selectedFile.name}
-                  </span>
-                  <button
-                    onClick={removeSelectedFile}
-                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              )}
+             
               <input
                 type="text"
                 value={input}

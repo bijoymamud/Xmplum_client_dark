@@ -204,7 +204,7 @@ const MessageLayout = () => {
 
         {/* Main Content Area */}
         <main className="flex-1 bg-gray-50 dark:bg-[#1D1B31] p-6 ">
-          <div className="max-w-4xl h-full mx-auto">
+          <div className="max-w-7xl h-full mx-auto">
             <Outlet />
           </div>
         </main>
