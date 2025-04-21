@@ -1,8 +1,4 @@
-
-
-
-
-// import React, { useState } from 'react';
+// import React, { useState, useEffect, useRef } from 'react';
 
 // import { Link, NavLink } from 'react-router-dom';
 // import {
@@ -13,21 +9,43 @@
 //   RiUserAddLine,
 //   RiSunLine,
 //   RiMoonLine,
+//   RiUserLine,
+//   RiSettingsLine,
+//   RiLogoutBoxLine,
 // } from 'react-icons/ri';
 // import { useDarkMood } from '../../Context/ThemeContext';
 // import { useLoggeInUserQuery } from '../../redux/features/baseApi';
 
 // const Navbar = () => {
 //   const [isOpen, setIsOpen] = useState(false);
+//   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 //   const { darkMode, setDarkMode } = useDarkMood();
 //   const { data: loggedInUser, isLoading } = useLoggeInUserQuery();
+//   const dropdownRef = useRef(null);
 
 //   const toggleDarkMode = () => setDarkMode(!darkMode);
+//   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+
+//   // Close dropdown when clicking outside
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+//         setIsDropdownOpen(false);
+//       }
+//     };
+//     document.addEventListener('mousedown', handleClickOutside);
+//     return () => document.removeEventListener('mousedown', handleClickOutside);
+//   }, []);
 
 //   const navLinks = [
 //     { name: 'Home', path: '/' },
 //     { name: 'About', path: '/about' },
 //     { name: 'Contact', path: '/contact' },
+//   ];
+
+//   const dropdownItems = [
+//     { name: 'Profile', path: '/profile', icon: RiUserLine },
+//     { name: 'Logout', path: '/logout', icon: RiLogoutBoxLine },
 //   ];
 
 //   return (
@@ -46,9 +64,7 @@
 //                 src="https://i.ibb.co.com/s9CpmcJD/Chatbot-Message-Bubble-removebg-preview.png"
 //                 alt="Brand Logo"
 //               />
-//               <span className="font-bold text-xl tracking-tight text-gray-900 dark:text-gray-200">
-            
-//               </span>
+//               <span className="font-bold text-xl tracking-tight text-gray-900 dark:text-gray-200"></span>
 //             </NavLink>
 //           </div>
 
@@ -92,15 +108,36 @@
 //             {isLoading ? (
 //               <div className="w-10 h-10 rounded-full bg-gray-200 animate-pulse" />
 //             ) : loggedInUser ? (
-//               <div className="avatar flex items-center gap-2" role="group" aria-label="User profile">
-//                 <div className="w-12 h-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
+//               <div className="relative avatar flex items-center gap-2" role="group" aria-label="User profile" ref={dropdownRef}>
+//                 <button
+//                   onClick={toggleDropdown}
+//                   className="w-12 h-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#271E88]"
+//                   aria-label="Open user menu"
+//                   aria-expanded={isDropdownOpen}
+//                 >
 //                   <img
 //                     src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
 //                     alt={`${loggedInUser?.full_name}'s avatar`}
 //                     className="w-full h-full object-cover"
 //                   />
-//                 </div>
-             
+//                 </button>
+//                 {isDropdownOpen && (
+//                   <div className="absolute right-0 top-14 w-48 bg-white dark:bg-[#221F42] rounded-md shadow-lg py-2 z-50 animate-dropdown border border-gray-400">
+//                     {dropdownItems.map((item) => (
+//                       <Link
+//                         key={item.name}
+//                         to={item.path}
+//                         className="flex items-center px-4 py-2 text-sm text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10"
+//                         onClick={() => setIsDropdownOpen(false)}
+//                         role="menuitem"
+//                         aria-label={item.name}
+//                       >
+//                         <item.icon className="w-4 h-4 mr-2" />
+//                         <span>{item.name}</span>
+//                       </Link>
+//                     ))}
+//                   </div>
+//                 )}
 //               </div>
 //             ) : (
 //               <div className="hidden md:flex items-center space-x-2">
@@ -192,8 +229,9 @@
 
 
 
+
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
   RiMenu3Line,
   RiCloseLine,
@@ -203,32 +241,51 @@ import {
   RiSunLine,
   RiMoonLine,
   RiUserLine,
-  RiSettingsLine,
   RiLogoutBoxLine,
 } from 'react-icons/ri';
 import { useDarkMood } from '../../Context/ThemeContext';
 import { useLoggeInUserQuery } from '../../redux/features/baseApi';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { darkMode, setDarkMode } = useDarkMood();
   const { data: loggedInUser, isLoading } = useLoggeInUserQuery();
   const dropdownRef = useRef(null);
+  const modalRef = useRef(null);
+  const navigate = useNavigate();
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
+      if (modalRef.current && !modalRef.current.contains(event.target) && isModalOpen) {
+        setIsModalOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [isModalOpen]);
+
+  const handleLogout = () => {
+
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    toast.success('Logged out successfully!', {
+      position: 'top-right',
+      autoClose: 2000,
+    });
+    setIsModalOpen(false);
+    setIsDropdownOpen(false);
+    navigate('/login');
+  };
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -238,8 +295,15 @@ const Navbar = () => {
 
   const dropdownItems = [
     { name: 'Profile', path: '/profile', icon: RiUserLine },
-    { name: 'Settings', path: '/settings', icon: RiSettingsLine },
-    { name: 'Logout', path: '/logout', icon: RiLogoutBoxLine },
+    {
+      name: 'Logout',
+      path: '#',
+      icon: RiLogoutBoxLine,
+      onClick: () => {
+        toggleModal();
+        setIsDropdownOpen(false);
+      },
+    },
   ];
 
   return (
@@ -288,7 +352,6 @@ const Navbar = () => {
 
           {/* Right Side - Dark Mode Toggle and Auth/Avatar */}
           <div className="flex items-center space-x-2">
-            {/* Dark Mode Toggle Button */}
             <button
               onClick={toggleDarkMode}
               className="p-2 rounded-full transition-colors duration-200 text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-[#271E88]"
@@ -321,8 +384,8 @@ const Navbar = () => {
                       <Link
                         key={item.name}
                         to={item.path}
+                        onClick={item.onClick || (() => setIsDropdownOpen(false))}
                         className="flex items-center px-4 py-2 text-sm text-gray-900 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10"
-                        onClick={() => setIsDropdownOpen(false)}
                         role="menuitem"
                         aria-label={item.name}
                       >
@@ -414,6 +477,45 @@ const Navbar = () => {
           </div>
         )}
       </div>
+
+      {/* Custom Logout Modal */}
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 z-50  flex items-center justify-center  bg-opacity-50 backdrop-blur-[3px] transition-opacity duration-300"
+          aria-labelledby="logout-modal-title"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            ref={modalRef}
+            className="bg-white dark:bg-[#221F42] border border-white/20  rounded-lg shadow-lg p-6 w-full max-w-xl pt-20 transform transition-all duration-300 scale-100"
+          >
+            <h3
+              id="logout-modal-title"
+              className="text-lg font-bold text-gray-900 dark:text-[#D0CDEF] mb-4"
+            >
+              Confirm Logout
+            </h3>
+            <p className="text-gray-700 dark:text-gray-300 mb-6">
+              Are you sure you want to log out?
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={toggleModal}
+                className="px-4 py-2 text-gray-900 dark:text-gray-300 bg-gray-200 dark:bg-[#1E1C3B] hover:bg-gray-300 dark:hover:bg-[#2c1f52] rounded-md focus:outline-none focus:ring-2 focus:ring-[#271E88] transition-colors duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-200"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
