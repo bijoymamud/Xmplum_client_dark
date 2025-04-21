@@ -37,15 +37,6 @@ const MessageLayout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
- 
-
-
-
-  // const history = [
-  //   { id: 1, title: "Website Development Discussion", time: "10:30 AM" },
-  //   { id: 51, title: "API Integration Meeting", time: "3 days ago" },
-  //   { id: 5, title: "Code Review Session", time: "4 days ago" },
-  // ];
 
   const toggleTheme = () => setDarkMode(!darkMode);
 

@@ -15,7 +15,7 @@ export const baseApi = createApi({
 
     }),
 
-    tagTypes: ['User', 'History'],
+    tagTypes: ['User', 'History', 'Chat'],
 
 
     endpoints: (builder) => ({
@@ -100,13 +100,15 @@ export const baseApi = createApi({
             url: "/chat_bot/create-message/",
             method: "POST",
             body: formData
-        })
+        }),
+        invalidatesTags: ['History'],
      }),
 
      getAllMessage: builder.mutation({
         query: (chatId)=>({
             url: `/chat_bot/get-messages/${chatId}/`,
             method: "GET",
+            providesTags: ['Chat']
         })
      }),
 
@@ -114,7 +116,27 @@ export const baseApi = createApi({
 
      perticularUserChatList: builder.query({
         query: ()=> "/chat_bot/get-chats/",
-        providesTags: ['History']
+        providesTags: ['History'],
+        pollingInterval: 30000,
+     }),
+
+     //getpackage
+     getAllPackage: builder.query({
+        query: ()=> "/payment/plans/",
+     }),
+
+     //payment
+     paymentCheckout: builder.mutation({
+        query: (planId) =>({
+            url: "/payment/create-checkout-session/",
+            method: "POST",
+            body: {plan_id: planId}
+        })
+     }),
+
+     //planDetails
+     planDetails: builder.query({
+        query: ()=>"/payment/user-subscription/"
      })
      
 })
@@ -150,6 +172,13 @@ export const {
 
     //perticular user chat
     usePerticularUserChatListQuery,
+
+    //pagkage
+    useGetAllPackageQuery,
+
+    //paymentCheckout
+    usePaymentCheckoutMutation,
+    usePlanDetailsQuery,
 
 } = baseApi;
 

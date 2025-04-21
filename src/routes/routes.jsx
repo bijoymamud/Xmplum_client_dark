@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Route } from "react-router-dom";
 import Main from "../layout/Main";
 import Home from "../page/home/Home";
 import Register from "../page/authentication/Register";
@@ -12,6 +12,7 @@ import ChatInterface from "../page/Message/ChatInterface";
 import SignupVerification from "../page/authentication/SignupVerification";
 import ChatHistory from "../page/Message/ChatHistory";
 import UserProfile from "../page/Profile/UserProfile";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -26,44 +27,54 @@ export const router = createBrowserRouter([
   
   },
 
-  // {path: 'chat', element: <MessageLayout/>,
-  //   children : [
-  //     {index: true, element: <ChatInterface/>},
-  //     {path: ':id', element: <ChatHistory/>},
-  //     {path: 'profile', element: <UserProfile/>},
 
-  //   ]
-
-    
-    
-  // },
 
   // {
-  //   path: 'profile',
-  //   element: (
-  //     <MessageLayout>
-  //       <UserProfile />
-  //     </MessageLayout>
-  //   ),
-  // },
+  //   path: '/',
+  //   element: <MessageLayout />, 
+  //   children: [
+  //     {
+  //       path: 'chat',
+  //       children: [
+  //         { index: true, element: <ChatInterface /> },
+  //         { path: ':id', element: <ChatHistory /> },
+  //       ],
+  //     },
+  //     {
+  //       path: 'profile',
+  //       element: <UserProfile />,
+  //     },
+  //   ],
+  // },  
+
+
 
   {
-    path: '/',
-    element: <MessageLayout />, // This wraps both /chat and /profile
+    element: <PrivateRoute />,
     children: [
       {
-        path: 'chat',
+        path: '/',
+        element: <MessageLayout />,
         children: [
-          { index: true, element: <ChatInterface /> },
-          { path: ':id', element: <ChatHistory /> },
+          {
+            path: 'chat',
+            children: [
+              { index: true, element: <ChatInterface /> },
+              { path: ':id', element: <ChatHistory /> },
+            ],
+          },
+          {
+            path: 'profile',
+            element: <UserProfile />,
+          },
         ],
       },
-      {
-        path: 'profile',
-        element: <UserProfile />,
-      },
     ],
-  },  
+  },
+
+
+
+
 
   {
     path:'/register',
