@@ -5,10 +5,10 @@ const Banner = () => {
   const {id} = useParams()
   return (
     <section className='min-h-screen flex items-center justify-center bg-white dark:bg-[#221F42]'>
-      <div className='container mx-auto px-4'>
+      <div className='container mx-auto md:px-4 px-2'>
         <div className='flex flex-col md:flex-row items-center justify-center gap-20'>
-          <div className='basis-6/12 text-center md:text-left'>
-            <h1 className='text-[50px] font-semibold uppercase dark:text-[#D0CDEF] text-gray-800'>Protecting Your Rights,
+          <div className='basis-6/12 text-center md:text-left mt-20 md:mt-0'>
+            <h1 className='md:text-[50px] text-[35px] font-semibold uppercase dark:text-[#D0CDEF] text-gray-800'>Protecting Your Rights,
             Property & Family</h1>
             <div className='mt-5'>
             <p className='dark:text-[#D0CDEF] text-gray-800 text-2xl'>Expert Legal Solutions in 

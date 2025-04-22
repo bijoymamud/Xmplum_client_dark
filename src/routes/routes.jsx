@@ -15,6 +15,7 @@ import UserProfile from "../page/Profile/UserProfile";
 import PrivateRoute from "./PrivateRoute";
 import AdminDashboard from "../layout/AdminDashboard/AdminDashboard";
 import AdminHome from "../layout/AdminDashboard/AdminHome";
+import UsersInfo from "../layout/AdminDashboard/UsersInfo";
 
 export const router = createBrowserRouter([
   {
@@ -35,7 +36,8 @@ export const router = createBrowserRouter([
     children: [
 
             { index: true, element: <AdminHome /> },
-            {path: "admin_home", element: <AdminHome/>}
+            {path: "admin_home", element: <AdminHome/>},
+            {path: "user_info", element: <UsersInfo/>}
     ] 
   },
 

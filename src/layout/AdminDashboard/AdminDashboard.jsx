@@ -56,7 +56,7 @@ const AdminDashboard = () => {
   // Sidebar navigation items
   const navItems = [
     { to: "/admin/admin_home", label: "Admin Home", icon: Home },
-    { to: "/users", label: "Users", icon: Users },
+    { to: "/admin/user_info", label: "Users", icon: Users },
     // { to: "/reports", label: "Reports", icon: FileText },
     // { to: "/analytics", label: "Analytics", icon: BarChart },
     // { to: "/data", label: "Data Management", icon: Database },

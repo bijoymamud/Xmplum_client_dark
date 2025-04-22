@@ -17,10 +17,10 @@ export default function FaqPage() {
   };
 
   return (
-    <div className=" bg-white dark:bg-[#221F42] p-4 flex items-center justify-center">
-      <div className="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
+    <div className=" bg-white dark:bg-[#221F42] md:p-4 p-3 flex items-center justify-center">
+      <div className="container mx-auto md:px-4 py-8 md:py-12 md:max-w-4xl">
         <div className="text-center mb-8 md:mb-12">
-          <h1 className="text-2xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-[#D0CDEF]">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-[#D0CDEF]">
             Frequently Asked Questions
           </h1>
           <p className="text-base md:text-lg text-gray-600 dark:text-[#D0CDEF] mb-6 md:mb-8 max-w-2xl mx-auto">
@@ -33,7 +33,7 @@ export default function FaqPage() {
               <div key={item.id} className="border-b border-gray-200 dark:border-[#1E1C3B] last:border-b-0">
                 <button
                   onClick={() => toggleQuestion(item.id)}
-                  className="w-full px-4 py-3 md:px-6 md:py-4 text-left font-medium text-gray-900 dark:text-white transition-all flex justify-between items-center hover:bg-gray-200 dark:hover:bg-[#18162E]"
+                  className="w-full px-3 py-3 md:px-6 md:py-4 text-left font-medium text-gray-900 dark:text-white transition-all flex justify-between items-center hover:bg-gray-200 dark:hover:bg-[#18162E]"
                   aria-expanded={openQuestion === item.id}
                   aria-controls={`faq-${item.id}`}
                 >

@@ -137,8 +137,8 @@ const Packages = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#221F42] p-4">
-      <div className="container p-10 py-20 w-full shadow-md bg-gray-100 dark:bg-[#1E1C3B] shadow-gray-900 rounded-lg">
-        <h2 className="text-3xl text-gray-900 dark:text-[#D0CDEF] font-semibold text-center mb-8">Packages</h2>
+      <div className="container md:p-10 md:py-20 w-full shadow-md bg-gray-100 dark:bg-[#1E1C3B] shadow-gray-900 rounded-lg">
+        <h2 className="text-3xl text-gray-900 dark:text-[#D0CDEF] font-semibold text-center mb-8 mt-5 md:mt-0">Packages</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:px-20 mx-auto">
           {packages?.map((plan) => {
