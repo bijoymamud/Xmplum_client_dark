@@ -1,8 +1,7 @@
 import React from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const Banner = () => {
-  const {id} = useParams()
   return (
     <section className='min-h-screen flex items-center justify-center bg-white dark:bg-[#221F42]'>
       <div className='container mx-auto md:px-4 px-2'>

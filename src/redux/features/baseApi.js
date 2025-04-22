@@ -157,6 +157,16 @@ export const baseApi = createApi({
         }),
         invalidatesTags: ['History'],
      }),
+
+     //dashboard
+     dashboardInfo: builder.query({
+        query: ()=>"/dashboard/info/",
+     }),
+
+
+     getAllUsersInfo: builder.query({
+        query: ()=>"/dashboard/users_subscriptions_info/",
+     })
      
 })
 });
@@ -203,7 +213,11 @@ export const {
     useDeletePerticularChatMutation,
 
     // deleteAllChat
-    useDeleteAllChatMutation
+    useDeleteAllChatMutation,
+
+    //dashboard
+    useDashboardInfoQuery,
+    useGetAllUsersInfoQuery,
 
 } = baseApi;
 
