@@ -13,6 +13,8 @@ import SignupVerification from "../page/authentication/SignupVerification";
 import ChatHistory from "../page/Message/ChatHistory";
 import UserProfile from "../page/Profile/UserProfile";
 import PrivateRoute from "./PrivateRoute";
+import AdminDashboard from "../layout/AdminDashboard/AdminDashboard";
+import AdminHome from "../layout/AdminDashboard/AdminHome";
 
 export const router = createBrowserRouter([
   {
@@ -27,25 +29,15 @@ export const router = createBrowserRouter([
   
   },
 
+ 
+  {
+    path: 'admin', element: <AdminDashboard/>,
+    children: [
 
-
-  // {
-  //   path: '/',
-  //   element: <MessageLayout />, 
-  //   children: [
-  //     {
-  //       path: 'chat',
-  //       children: [
-  //         { index: true, element: <ChatInterface /> },
-  //         { path: ':id', element: <ChatHistory /> },
-  //       ],
-  //     },
-  //     {
-  //       path: 'profile',
-  //       element: <UserProfile />,
-  //     },
-  //   ],
-  // },  
+            { index: true, element: <AdminHome /> },
+            {path: "admin_home", element: <AdminHome/>}
+    ] 
+  },
 
 
 
