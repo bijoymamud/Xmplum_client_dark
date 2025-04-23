@@ -579,7 +579,7 @@ const ChatInterface = () => {
         }`}
       >
         {/* Chat Area */}
-        <div className="flex-1 p-4 overflow-y-auto h-[70vh]" ref={chatContainerRef}>
+        <div className="flex-1 md:p-4 overflow-y-auto h-[70vh]" ref={chatContainerRef}>
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full">
               <img
@@ -607,7 +607,7 @@ const ChatInterface = () => {
                   <img
                     src="https://png.pngtree.com/png-vector/20220622/ourmid/pngtree-chatbot-color-icon-chat-bot-png-image_5258006.png"
                     alt="Bot"
-                    className="w-10 h-10 rounded-full object-cover"
+                    className="md:w-10 md:h-10 w-7 h-7 rounded-full object-cover"
                   />
                 )}
                 <div
@@ -623,11 +623,11 @@ const ChatInterface = () => {
                       <img
                         src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
                         alt="PDF"
-                        className="w-6 h-6"
+                        className="md:w-6 md:h-6 w-3 h-3"
                       />
                       <button
                         onClick={() => handlePdfClick(message.question_file)}
-                        className="text-sm truncate underline hover:text-blue-200"
+                        className="text-xs md:text-sm truncate underline hover:text-blue-200"
                       >
                         {message.question_file.split("/").pop()}
                       </button>
@@ -638,14 +638,13 @@ const ChatInterface = () => {
                   <img
                     src="https://freesvg.org/img/publicdomainq-0006224bvmrqd.png"
                     alt="You"
-                    className="w-10 h-10 rounded-full object-cover"
+                    className="md:w-10 md:h-10 w-7 h-7 rounded-full object-cover"
                   />
                 )}
               </div>
             ))
           )}
 
-          {/* Bot Typing Loader */}
           {isBotTyping && (
             <div className="flex items-end gap-2 mb-4">
               <img
@@ -668,9 +667,9 @@ const ChatInterface = () => {
             <img
               src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
               alt="PDF"
-              className="w-6 h-6"
+              className="md:w-6 md:h-6 w-3 h-3"
             />
-            <span className="text-sm text-gray-800 dark:text-[#D0CDEF] truncate">
+            <span className="text-xs md:text-sm text-gray-800 dark:text-[#D0CDEF] truncate">
               {selectedFile.name}
             </span>
             <button
@@ -683,13 +682,13 @@ const ChatInterface = () => {
         )}
 
         {/* Input Area */}
-        <div className="p-4 bg-white rounded-full dark:bg-[#2D2956] border-t border-gray-200 dark:border-gray-700 sticky bottom-0">
+        <div className="md:p-4 p-2 bg-white rounded-full dark:bg-[#2D2956] border-t border-gray-200 dark:border-gray-700 sticky bottom-0">
           <div className="flex items-center gap-2 mx-auto">
             <button
               onClick={handleFileAttachment}
               className="p-2 cursor-pointer dark:hover:bg-gray-700 rounded-full dark:text-[#6A62C3] text-gray-800 transition-colors duration-200"
             >
-              <Paperclip size={28} />
+              <Paperclip  size={window.innerWidth < 640 ? 24: 28} />
             </button>
             <input
               type="file"
@@ -714,7 +713,9 @@ const ChatInterface = () => {
               onClick={handleSendMessage}
               className="p-2 cursor-pointer dark:hover:bg-gray-700 rounded-full dark:text-[#6A62C3] text-gray-800 transition-colors duration-200"
             >
-              <Send size={28} />
+              {/* <Send size={28} /> */}
+              <Send size={window.innerWidth < 640 ? 24: 28} />
+
             </button>
           </div>
         </div>

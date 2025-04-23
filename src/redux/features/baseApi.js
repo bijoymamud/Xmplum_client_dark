@@ -166,6 +166,16 @@ export const baseApi = createApi({
 
      getAllUsersInfo: builder.query({
         query: ()=>"/dashboard/users_subscriptions_info/",
+        providesTags: ['User'],
+     }),
+
+     //deleteuser
+     deleteUser: builder.mutation({
+        query: (id) =>({
+            url: `users/${id}/delete/`,
+            method: "DELETE"
+        }),
+        invalidatesTags: ['User'],
      })
      
 })
@@ -218,6 +228,8 @@ export const {
     //dashboard
     useDashboardInfoQuery,
     useGetAllUsersInfoQuery,
+    useDeleteUserMutation,
+
 
 } = baseApi;
 
