@@ -4,6 +4,7 @@ export const baseApi = createApi({
     reducerPath: 'baseApi',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://192.168.10.131:8000/api/v1',
+       
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("access_token");
             if (token) {
@@ -12,7 +13,7 @@ export const baseApi = createApi({
             return headers;
         },
 
-
+      
     }),
 
     tagTypes: ['User', 'History', 'Chat'],

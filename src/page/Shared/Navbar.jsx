@@ -29,6 +29,9 @@ const Navbar = () => {
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
+  const BASE_URL = "http://192.168.10.131:8000";
+
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -140,7 +143,7 @@ const Navbar = () => {
                   aria-haspopup="true"
                 >
                   <img
-                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    src={`${BASE_URL}${loggedInUser?.user?.image}`}       
                     alt={`${loggedInUser?.full_name}'s avatar`}
                     className="w-full h-full object-cover"
                   />

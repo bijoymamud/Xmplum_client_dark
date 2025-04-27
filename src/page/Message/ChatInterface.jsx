@@ -381,6 +381,7 @@ import { RPProvider, RPDefaultLayout, RPPages, RPConfig } from '@pdf-viewer/reac
 
 import {
   useGetAllMessageMutation,
+  useLoggeInUserQuery,
   useSendMessageMutation,
 } from "../../redux/features/baseApi";
 import {
@@ -408,6 +409,7 @@ const ChatInterface = () => {
   const [sendMessage] = useSendMessageMutation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [getAllMessage, { isLoading }] = useGetAllMessageMutation();
+  const { data: userInfo } = useLoggeInUserQuery();
 
   const BASE_URL = "http://192.168.10.131:8000";
 
@@ -648,8 +650,7 @@ const ChatInterface = () => {
                 </div>
                 {message.sender === "user" && (
                   <img
-                    src="https://freesvg.org/img/publicdomainq-0006224bvmrqd.png"
-                    alt="You"
+                  src={`${BASE_URL}${userInfo?.user?.image}`}                    alt="You"
                     className="md:w-10 md:h-10 w-7 h-7 rounded-full object-cover"
                   />
                 )}

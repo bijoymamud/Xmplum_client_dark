@@ -38,15 +38,16 @@ const MessageLayout = () => {
   const { data: history, isLoading: isHistoryLoading } = usePerticularUserChatListQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: bots } = useBotListQuery();
-  const [deletePerticularChat] = useDeletePerticularChatMutation();
+  const [deletePerticularChat] = useDeletePerticularChatMutation();  
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);
   const selectedChatId = useSelector((state) => state.chatpage.selectedChatId);
 
   const toggleTheme = () => setDarkMode(!darkMode);
+  const baseUrl = "http://192.168.10.131:8000/"
 
-  console.log("Chat history:", history);
+  console.log("Chat history:", history, userInfo);
 
   const handleLogoutConfirm = () => {
     console.log("Logging out...");
@@ -296,9 +297,9 @@ const MessageLayout = () => {
               aria-expanded={isDropdownOpen}
             >
               <img
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt="丢失的用户"
-                className="w-10 h-10 rounded-full"
+                src={`${baseUrl}${userInfo?.user?.image}`}
+                alt="image"
+                className="w-10 h-10 rounded-full object-cover"
               />
               <ChevronDown
                 size={16}
